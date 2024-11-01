@@ -15,7 +15,7 @@ namespace xUnit_Handin_2
         {
             //GetActor unit test Nikolaj. 
             var Actor = new Actor();
-            Assert.Equal(0,)
+            Assert.Equal(0);
 
 
         }
