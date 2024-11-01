@@ -11,7 +11,7 @@ namespace HandIn_2_Gr_1;
 
 public class DataServiceActors
 {
-    public static string filepath = "C:/Users/bena3/Desktop/NotAtAllPostGresPW.txt";
+    public static string filepath = "C:/Users/NotAtAllPostGresPW.txt";
     public static string filecontent = File.ReadAllText(filepath);
 
     public static void Main(string[] args)
