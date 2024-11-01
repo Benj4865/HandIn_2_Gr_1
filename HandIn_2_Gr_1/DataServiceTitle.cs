@@ -8,6 +8,6 @@ namespace HandIn_2_Gr_1
 {
     internal class DataServiceTitle
     {
-
+        
     }
 }
