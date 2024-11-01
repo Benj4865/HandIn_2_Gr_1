@@ -18,6 +18,9 @@ namespace HandIn_2_Gr_1.Types
 
         public IList<Professions> Primaryprofessions { get; set; } = null;
 
+        public string Knownfortitles { get; set; }
+
+
     }
 
 
