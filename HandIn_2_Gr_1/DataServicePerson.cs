@@ -10,7 +10,7 @@ using HandIn_2_Gr_1.Types;
 namespace HandIn_2_Gr_1;
 
 
-public class DataServiceActors
+public class DataServicePerson
 {
     public static string filepath = "C:/Users/NotAtAllPostGresPW.txt";
     public static string filecontent = File.ReadAllText(filepath);
@@ -52,7 +52,7 @@ public class DataServiceActors
         }
     } // Can be deleted after DataService Completion
 
-    public static Actor GetActor(string id)
+    public static Person GetActor(string id)
     {
 
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -70,7 +70,7 @@ public class DataServiceActors
 
             while (reader.Read())
             {
-                Actor actor = new Actor()
+                Person actor = new Person()
                 {
                     Nconst = reader.GetString(0),
                     Primaryname = reader.GetString(1),
@@ -89,7 +89,7 @@ public class DataServiceActors
     }
 
 
-    public IList<Actor> SearchByProfession(string professionname)
+    public IList<Person> SearchByProfession(string professionname)
     {
 
 

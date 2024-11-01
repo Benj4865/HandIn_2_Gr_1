@@ -10,7 +10,7 @@ namespace HandIn_2_Gr_1
 {
     public interface IDataService
     {
-        public Actor GetActor(string nconst);
+        public Person GetActor(string nconst);
         IList<Professions> SearchByProfession(string professionstype);
 
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HandIn_2_Gr_1.Types
 {
-    public class Actor
+    public class Person
     {
         public string Nconst { get; set; }
 
