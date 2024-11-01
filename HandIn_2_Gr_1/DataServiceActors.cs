@@ -49,7 +49,7 @@ public class DataServiceActors
         {
 
         }
-    } // Can be deleted afterwards
+    } // Can be deleted after DataService Completion
 
     public static Actor GetActor(string id)
     {
@@ -86,7 +86,6 @@ public class DataServiceActors
 
         return null;
     }
-
 
 
     public IList<Actor> SearchByProfession(string professionname)
