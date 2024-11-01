@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System;
 using System.IO;
+using HandIn_2_Gr_1.Types;
 
 
 namespace HandIn_2_Gr_1;

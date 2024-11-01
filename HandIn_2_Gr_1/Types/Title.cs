@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HandIn_2_Gr_1
+namespace HandIn_2_Gr_1.Types
 {
     public class Title
     {
         public string tconst { get; set; }
-            
-        
+
+
     }
 }
