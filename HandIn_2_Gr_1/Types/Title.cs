@@ -10,6 +10,24 @@ namespace HandIn_2_Gr_1.Types
     {
         public string tconst { get; set; }
 
+        public string TitleType { get; set; }
+
+        public string PrimaryTitle { get; set; }
+
+        public string OriginalTitle { get; set; }
+
+        public bool IsAdult { get; set; }
+
+        public string StartYear { get; set; }
+
+        public string EndYear { get; set; }
+
+        public int RuntimeMinutes { get; set; }
+
+        public IList<Genre> Genre { get; set; }
+
+
+
 
     }
 }

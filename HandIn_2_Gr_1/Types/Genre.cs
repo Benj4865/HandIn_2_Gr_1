@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace HandIn_2_Gr_1.Types
 {
-    public class Professions
+    public class Genre
     {
-        public int professionID { get; set; }
-
-        public string professionName { get; set; }
-
-
+        public string genre { get; set; }
 
     }
 }
