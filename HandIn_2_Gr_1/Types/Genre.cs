@@ -8,7 +8,7 @@ namespace HandIn_2_Gr_1.Types
 {
     public class Genre
     {
-        public string genre { get; set; }
+        public string? GenreName { get; set; }
 
     }
 }
