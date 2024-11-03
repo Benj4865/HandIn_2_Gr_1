@@ -56,7 +56,7 @@ public class DataServicePerson
         }
     } // Can be deleted after DataService Completion
 
-    public static Person GetActor(string id)
+    public static Person GetPerson(string id)
     {
 
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
