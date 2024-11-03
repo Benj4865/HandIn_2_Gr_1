@@ -134,3 +134,6 @@ public class DataServicePerson
 
 
 }
+
+// SELECT t.nconst, t.profession, s.primaryname FROM nm_professions t INNER JOIN name_basics s ON t.nconst = s.nconst where t.nconst = 'nm0006035';
+// Finds name and profession from nconst
