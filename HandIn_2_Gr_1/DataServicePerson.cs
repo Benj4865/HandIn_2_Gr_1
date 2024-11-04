@@ -16,6 +16,7 @@ public class DataServicePerson
     public static string filecontent = File.ReadAllText(filepath);
 
     public IList<Person> PersonList = new List<Person>();
+    public static IList<Title>? titleList = new List<Title>();
 
 
 
@@ -156,12 +157,19 @@ public class DataServicePerson
             while (reader.Read())
             {
 
+                Title title = new Title
+                {
+                    Tconst = reader.GetString(1),
+                    PrimaryTitle = reader.GetString(3),
+                };
+
+               
                 Person person = new Person()
                 {
                     Primaryname = reader.GetString(0),
-
-                    
+                    Primarytitle = reader.GetString(3)
                 };
+
 
 
                 Console.WriteLine(person.Primaryname + ", " + person.Primarytitle);
