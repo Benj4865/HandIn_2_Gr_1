@@ -22,7 +22,6 @@ namespace HandIn_2_Gr_1
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
             using var connection = new NpgsqlConnection(connectionString);
 
-          // To clear titleList if data is in it already
 
             try
             {
