@@ -14,7 +14,7 @@ namespace HandIn_2_Gr_1
         public static string filepath = "C:/Users/NotAtAllPostGresPW.txt";
         public static string filecontent = File.ReadAllText(filepath);
 
-        public static IList<Title> titleList = new List<Title>();
+        public static IList<Title>? titleList = new List<Title>();
 
         public static IList<Title> FindEpisodesFromSeriesTconst(string ParentTconst)
         {
@@ -43,9 +43,12 @@ namespace HandIn_2_Gr_1
                         PrimaryTitle = reader.GetString(1),
                         IsEpisode = true
                     };
+
                     Console.WriteLine(title.Tconst + ", " + title.PrimaryTitle);
                     titleList.Add(title);
+                   
                 }
+                return titleList;
             }
             catch (Exception ex)
             {

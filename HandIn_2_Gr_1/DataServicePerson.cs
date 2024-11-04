@@ -76,14 +76,14 @@ public class DataServicePerson
 
             while (reader.Read())
             {
-                Person actor = new Person()
+                Person person = new Person()
                 {
                     Nconst = reader.GetString(0),
                     Primaryname = reader.GetString(1),
                     Birthyear = reader.GetString(2)
                 };
-
-                Console.WriteLine(actor.Birthyear + ", " + actor.Nconst + ", " + actor.Primaryname);
+                
+                Console.WriteLine(person.Birthyear + ", " + person.Nconst + ", " + person.Primaryname);
                 Console.Write("Data Found");
             }
         }
