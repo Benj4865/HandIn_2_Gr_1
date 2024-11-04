@@ -18,6 +18,8 @@ namespace HandIn_2_Gr_1
         IList<Title> FindEpisodesFromSeriesTconst(string ParentTconst);
         IList<Title> FindKnownForTitles(string Nconst);
 
+        IList<User> UserList();
+
 
 
     }
