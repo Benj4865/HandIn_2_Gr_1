@@ -20,10 +20,8 @@ public class DataServicePerson
     public static void Main(string[] args)
     {
         //retrieve_data();
-        GetPerson("nm11345295");
+        //GetPerson("nm11345295");
         //DataServiceTitle.FindEpisodesFromSeriesTconst("tt0108778");
-
-
 
     }
     public static void retrieve_data()
