@@ -20,8 +20,8 @@ public class DataServicePerson
     public static void Main(string[] args)
     {
         //retrieve_data();
-        //GetActor("nm11345295");
-        DataServiceTitle.FindEpisodesFromSeriesTconst("tt0052520");
+        GetPerson("nm11345295");
+        //DataServiceTitle.FindEpisodesFromSeriesTconst("tt0108778");
 
 
 
@@ -85,7 +85,10 @@ public class DataServicePerson
                 
                 Console.WriteLine(person.Birthyear + ", " + person.Nconst + ", " + person.Primaryname);
                 Console.Write("Data Found");
+
+                return person;
             }
+            
         }
         catch (Exception ex)
         {
