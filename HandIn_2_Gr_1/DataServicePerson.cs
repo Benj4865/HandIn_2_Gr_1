@@ -135,6 +135,27 @@ public class DataServicePerson
 
     }
 
+    public static IList<Title> FindKnowForTitles(string Nconst)
+    {
+        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+        using var connection = new NpgsqlConnection(connectionString);
+
+        try
+        {
+            connection.Open();
+            Console.WriteLine("Sucess\n");
+
+
+            using var cmd = new NpgsqlCommand("'SELECT * FROM known_for where nconst ='" + Nconst + "';", connection);
+
+        }
+
+
+        catch { }
+
+        return null;
+    }
+
 
 }
 
