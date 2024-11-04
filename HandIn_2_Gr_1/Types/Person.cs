@@ -8,17 +8,17 @@ namespace HandIn_2_Gr_1.Types
 {
     public class Person
     {
-        public string Nconst { get; set; }
+        public string Nconst { get; set; } = null;
 
-        public string Primaryname { get; set; }
+        public string Primaryname { get; set; } = null;
 
-        public string Birthyear { get; set; }
+        public string Birthyear { get; set; } = null;
 
-        public string Deathyear { get; set; }
+        public string Deathyear { get; set; } = null;
 
         public IList<Professions> Primaryprofessions { get; set; } = null;
 
-        public IList<Title> Titles { get; set; } 
+        public IList<Title> KnownFor { get; set; } = null;
 
 
     }
