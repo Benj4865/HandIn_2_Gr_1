@@ -138,6 +138,7 @@ public class DataServicePerson
 
     }
 
+    /*
     public static IList<Title> FindKnownForTitles(string Nconst)
     {
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -183,6 +184,7 @@ public class DataServicePerson
 
         return null;
     }
+    */
 
 
 }

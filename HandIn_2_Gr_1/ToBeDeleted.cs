@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HandIn_2_Gr_1
-{
+{/*
     internal class ToBeDeleted
     {
 
@@ -87,4 +87,4 @@ namespace HandIn_2_Gr_1
         }
 
     }
-}
+*/}
