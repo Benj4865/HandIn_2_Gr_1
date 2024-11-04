@@ -26,6 +26,9 @@ namespace HandIn_2_Gr_1.Types
 
         public IList<Genre>? Genre { get; set; }
 
+        public double Averagerating { get; set; }
+         
+        public int Numberofvotes { get; set; }
 
         //Below is a custom attribute, indicating wether or not the title is a in a series or is a standalone movie
         public bool IsEpisode { get; set; } = false;
