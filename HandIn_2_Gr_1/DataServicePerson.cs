@@ -148,7 +148,7 @@ public class DataServicePerson
             connection.Open();
             Console.WriteLine("Sucess\n");
 
-            using var cmd = new NpgsqlCommand("SELECT nconst, primaryname, birthyear FROM name_basics WHERE nconst = '" + id + "' ", connection);
+            using var cmd = new NpgsqlCommand(" '" + id + "' ", connection);
 
             using var reader = cmd.ExecuteReader();
 
@@ -163,7 +163,7 @@ public class DataServicePerson
                         PrimaryTitle = reader.GetString(2) 
                     };
 
-                    // Create a Person object
+                    
                     Person person = new Person
                     {
                         PrimaryName = reader.GetString(0), 
