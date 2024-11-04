@@ -20,5 +20,13 @@ namespace xUnit_Handin_2
             Assert.Equal("María Alejandra Mosquera", person.Primaryname);
 
         }
+
+        [Fact]
+        public void CheckEpisodesOnTConst()
+        { 
+
+
+        
+        }
     }
 }
