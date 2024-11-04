@@ -13,7 +13,7 @@ namespace xUnit_Handin_2
 
 
         [Fact]
-        public void benjiTester()
+        public void CheckNameOnPerson()
         {
             var Service = new DataServicePerson();
             Person person = DataServicePerson.GetPerson("nm11345295");
