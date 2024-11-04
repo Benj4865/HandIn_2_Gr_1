@@ -16,12 +16,15 @@ public class DataServicePerson
     public static string filecontent = File.ReadAllText(filepath);
 
     public IList<Person> PersonList = new List<Person>();
+    public static IList<Title>? titleList = new List<Title>();
+
+
 
     public static void Main(string[] args)
     {
         //retrieve_data();
-        //GetActor("nm11345295");
-
+        //GetPerson("nm11345295");
+        //DataServiceTitle.FindEpisodesFromSeriesTconst("tt0108778");
 
     }
     public static void retrieve_data()
@@ -74,16 +77,19 @@ public class DataServicePerson
 
             while (reader.Read())
             {
-                Person actor = new Person()
+                Person person = new Person()
                 {
                     Nconst = reader.GetString(0),
                     Primaryname = reader.GetString(1),
                     Birthyear = reader.GetString(2)
                 };
-
-                Console.WriteLine(actor.Birthyear + ", " + actor.Nconst + ", " + actor.Primaryname);
+                
+                Console.WriteLine(person.Birthyear + ", " + person.Nconst + ", " + person.Primaryname);
                 Console.Write("Data Found");
+
+                return person;
             }
+            
         }
         catch (Exception ex)
         {
@@ -130,6 +136,52 @@ public class DataServicePerson
 
         return null;
 
+    }
+
+    public static IList<Title> FindKnownForTitles(string Nconst)
+    {
+        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+        using var connection = new NpgsqlConnection(connectionString);
+        
+        try
+        {
+            connection.Open();
+            Console.WriteLine("Sucess\n");
+
+            using var cmd = new NpgsqlCommand("SELECT nconst, primaryname, birthyear FROM name_basics WHERE nconst = '" + id + "' ", connection);
+
+            using var reader = cmd.ExecuteReader();
+
+            {
+                
+                while (reader.Read())
+                {
+                    
+                    Title title = new Title
+                    {
+                        Tconst = reader.GetString(1), 
+                        PrimaryTitle = reader.GetString(2) 
+                    };
+
+                    // Create a Person object
+                    Person person = new Person
+                    {
+                        PrimaryName = reader.GetString(0), 
+                                                           
+                        PrimaryTitle = title.PrimaryTitle
+                    };
+
+                    
+                    titles.Add(title);
+                    persons.Add(person);
+                }
+            }
+        }
+
+
+        catch { }
+
+        return null;
     }
 
 

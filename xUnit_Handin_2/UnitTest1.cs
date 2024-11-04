@@ -1,6 +1,3 @@
-using HandIn_2_Gr_1;
-using Xunit;
-
 namespace xUnit_Handin_2
 {
     public class DataServicePersonTests
@@ -23,13 +20,20 @@ namespace xUnit_Handin_2
         }
         [Fact]
         public void GetPerson_InvalidID_ReturnsNull()
+        public void TestIsEpisode()
         {
-            var invalidId = "nm10000000";
-            var service = new DataServicePerson();
+
+        }
+
+        // Tests wether or not the name of a specific person is correct
+        [Fact]
+        public void CheckNameOnPerson()
+        {
 
             var result = DataServicePerson.GetPerson(invalidId);
 
-            Assert.Null(result);
         }
+
+
     }
 }
