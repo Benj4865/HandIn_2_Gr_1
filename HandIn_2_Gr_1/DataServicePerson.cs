@@ -17,6 +17,8 @@ public class DataServicePerson
 
     public IList<Person> PersonList = new List<Person>();
 
+
+
     public static void Main(string[] args)
     {
         //retrieve_data();
@@ -153,12 +155,13 @@ public class DataServicePerson
 
             while (reader.Read())
             {
+
                 Person person = new Person()
                 {
                     Primaryname = reader.GetString(0),
-                    Primarytitle = reader.GetString(3)
-                };
 
+                    
+                };
 
 
                 Console.WriteLine(person.Primaryname + ", " + person.Primarytitle);
