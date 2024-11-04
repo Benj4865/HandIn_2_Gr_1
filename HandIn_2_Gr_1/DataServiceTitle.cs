@@ -39,7 +39,6 @@ namespace HandIn_2_Gr_1
             }
             catch (Exception ex)
             {
-
             }
 
             return null;
