@@ -9,7 +9,7 @@ namespace HandIn_2_Gr_1
 {
     public class DataServiceUser
     {
-       public IList<User> UserList()
+       public IList<User> GetUsers()
         {
             return null;
         }
