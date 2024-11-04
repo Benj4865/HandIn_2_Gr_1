@@ -148,35 +148,34 @@ public class DataServicePerson
             connection.Open();
             Console.WriteLine("Sucess\n");
 
-
-            using var cmd = new NpgsqlCommand("'SELECT k.nconst, k.tconst, n.primaryname, t.primarytitle FROM known_for k INNER JOIN name_basics n ON k.nconst = n.nconst INNER JOIN title_basics t ON k.tconst = t.tconst WHERE k.nconst ='" + Nconst + "';", connection);
+            using var cmd = new NpgsqlCommand("SELECT nconst, primaryname, birthyear FROM name_basics WHERE nconst = '" + id + "' ", connection);
 
             using var reader = cmd.ExecuteReader();
 
-
-            while (reader.Read())
             {
-
-                Title title = new Title
+                
+                while (reader.Read())
                 {
-                    Tconst = reader.GetString(1),
-                    PrimaryTitle = reader.GetString(3),
-                };
+                    
+                    Title title = new Title
+                    {
+                        Tconst = reader.GetString(1), 
+                        PrimaryTitle = reader.GetString(2) 
+                    };
 
-               
-                Person person = new Person()
-                {
-                    Primaryname = reader.GetString(0),
-                    Primarytitle = reader.GetString(3)
-                };
+                    // Create a Person object
+                    Person person = new Person
+                    {
+                        PrimaryName = reader.GetString(0), 
+                                                           
+                        PrimaryTitle = title.PrimaryTitle
+                    };
 
-
-
-                Console.WriteLine(person.Primaryname + ", " + person.Primarytitle);
-
-                return person;
+                    
+                    titles.Add(title);
+                    persons.Add(person);
+                }
             }
-
         }
 
 
