@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HandIn_2_Gr_1
+namespace HandIn_2_Gr_1.Types
 {
-    public class Title
+    public class Genre
     {
-        public string tconst { get; set; }
-            
-        
+        public string? GenreName { get; set; }
+
     }
 }

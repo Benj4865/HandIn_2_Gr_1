@@ -1,4 +1,5 @@
 ﻿using HandIn_2_Gr_1.Models;
+using HandIn_2_Gr_1.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,12 @@ namespace HandIn_2_Gr_1
 {
     public interface IDataService
     {
-        public Actor GetActor(string nconst);
-        IList<Professions> SearchByProfession(string professionstype);
+        public Person GetPerson(string nconst);
+        IList<Person> SearchByProfession(string professionstype);
+
+        //IList<Title> SearchByGerne(string GenreName);
+
+
 
 
     }
