@@ -13,6 +13,5 @@ namespace HandIn_2_Gr_1.Types
         public string professionName { get; set; }
 
 
-
     }
 }
