@@ -1,9 +1,14 @@
+using HandIn_2_Gr_1;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<IDataServiceUser, DataServiceUser>();
+builder.Services.AddSingleton<IDataServicePerson, DataServicePerson>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

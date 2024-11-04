@@ -10,7 +10,7 @@ using HandIn_2_Gr_1.Types;
 namespace HandIn_2_Gr_1;
 
 
-public class DataServicePerson
+public class DataServicePerson : IDataServicePerson
 {
     public static string filepath = "C:/Users/NotAtAllPostGresPW.txt";
     public static string filecontent = File.ReadAllText(filepath);
@@ -59,7 +59,7 @@ public class DataServicePerson
         }
     } // Can be deleted after DataService Completion
 
-    public static Person GetPerson(string id)
+    public Person GetPerson(string nconst)
     {
 
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -70,7 +70,7 @@ public class DataServicePerson
             connection.Open();
             Console.WriteLine("Sucess\n");
 
-            using var cmd = new NpgsqlCommand("SELECT nconst, primaryname, birthyear FROM name_basics WHERE nconst = '" + id + "' ", connection);
+            using var cmd = new NpgsqlCommand("SELECT nconst, primaryname, birthyear FROM name_basics WHERE nconst = '" + nconst + "' ", connection);
 
             using var reader = cmd.ExecuteReader();
 

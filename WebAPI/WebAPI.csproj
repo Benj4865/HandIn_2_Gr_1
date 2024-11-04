@@ -14,4 +14,8 @@
     <ProjectReference Include="..\HandIn_2_Gr_1\HandIn_2_Gr_1.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>
