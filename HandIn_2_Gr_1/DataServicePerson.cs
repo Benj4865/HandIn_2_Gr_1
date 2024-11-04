@@ -137,7 +137,7 @@ public class DataServicePerson
 
     }
 
-    public static IList<Title> FindKnowForTitles(string Nconst)
+    public static IList<Title> FindKnownForTitles(string Nconst)
     {
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
         using var connection = new NpgsqlConnection(connectionString);
@@ -148,7 +148,25 @@ public class DataServicePerson
             Console.WriteLine("Sucess\n");
 
 
-            using var cmd = new NpgsqlCommand("'SELECT * FROM known_for where nconst ='" + Nconst + "';", connection);
+            using var cmd = new NpgsqlCommand("'SELECT k.nconst, k.tconst, n.primaryname, t.primarytitle FROM known_for k INNER JOIN name_basics n ON k.nconst = n.nconst INNER JOIN title_basics t ON k.tconst = t.tconst WHERE k.nconst ='" + Nconst + "';", connection);
+
+            using var reader = cmd.ExecuteReader();
+
+
+            while (reader.Read())
+            {
+                Person person = new Person()
+                {
+                    Primaryname = reader.GetString(0),
+                    Primarytitle = reader.GetString(3)
+                };
+
+
+
+                Console.WriteLine(person.Primaryname + ", " + person.Primarytitle);
+
+                return person;
+            }
 
         }
 

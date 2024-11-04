@@ -16,7 +16,7 @@ namespace HandIn_2_Gr_1
         //IList<Title> SearchByGerne(string GenreName);
 
         IList<Title> FindEpisodesFromSeriesTconst(string ParentTconst);
-        IList<Title> FindKnowForTitles(string Nconst);
+        IList<Title> FindKnownForTitles(string Nconst);
 
 
 
