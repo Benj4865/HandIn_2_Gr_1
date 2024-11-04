@@ -8,16 +8,20 @@ using System.Threading.Tasks;
 
 namespace HandIn_2_Gr_1
 {
-    internal class DataServiceTitle
+    public class DataServiceTitle
     {
 
         public static string filepath = "C:/Users/NotAtAllPostGresPW.txt";
         public static string filecontent = File.ReadAllText(filepath);
 
+        public static IList<Title> titleList = new List<Title>();
+
         public static IList<Title> FindEpisodesFromSeriesTconst(string ParentTconst)
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
             using var connection = new NpgsqlConnection(connectionString);
+
+            titleList = null; // To clear titleList if data is in it already
 
             try
             {
@@ -29,12 +33,18 @@ namespace HandIn_2_Gr_1
 
                 using var reader = cmd.ExecuteReader();
 
+                
 
                 while (reader.Read())
                 {
-                    string tconst = reader.GetString(0);
-                    string PrimaryTitle = reader.GetString(1);
-                    Console.WriteLine("Tconst = " + tconst + ", Name = " + PrimaryTitle);
+                    Title title = new Title
+                    {
+                        Tconst = reader.GetString(0),
+                        PrimaryTitle = reader.GetString(1),
+                        IsEpisode = true
+                    };
+                    Console.WriteLine(title.Tconst + ", " + title.PrimaryTitle);
+                    titleList.Add(title);
                 }
             }
             catch (Exception ex)
