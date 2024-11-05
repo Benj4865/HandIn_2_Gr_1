@@ -5,6 +5,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System;
 using System.IO;
 using HandIn_2_Gr_1.Types;
+using System.Security.Cryptography;
 
 
 namespace HandIn_2_Gr_1;
@@ -138,7 +139,7 @@ public class DataServicePerson : IDataServicePerson
 
     }
 
-    /*
+    
     public static IList<Title> FindKnownForTitles(string Nconst)
     {
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -160,7 +161,6 @@ public class DataServicePerson : IDataServicePerson
                 while (reader.Read())
                 {
                     Title title = new Title
-
                     {
                         Tconst = reader.GetString(1),
                         PrimaryTitle = reader.GetString(0)
@@ -173,7 +173,6 @@ public class DataServicePerson : IDataServicePerson
 
             using (var cmd = new NpgsqlCommand("SELECT primaryname FROM name_basics WHERE nconst = 'nm0001268';'"))
 
-             cmd.Parameters.AddWithValue("nconst", "nm0000138");
 
             using (var reader = cmd.ExecuteReader())
             {
@@ -184,17 +183,18 @@ public class DataServicePerson : IDataServicePerson
                     {
                         Person person = new Person
                         {
-                            Primaryname = reader.GetString(1),
+                            Primaryname = reader.GetString(0),
                         };
                         persons.Add(person);
+                        
                     }
                 }
 
-            }  
-            
-            return new { titles = titles, persons = persons };  
-        }
+            }
 
+            return titles;
+            
+        }
 
         catch 
         {
@@ -203,8 +203,6 @@ public class DataServicePerson : IDataServicePerson
 
         
     }
-    */
-
 
 }
 
