@@ -83,13 +83,13 @@ public class DataServicePerson
                     Primaryname = reader.GetString(1),
                     Birthyear = reader.GetString(2)
                 };
-                
+
                 Console.WriteLine(person.Birthyear + ", " + person.Nconst + ", " + person.Primaryname);
                 Console.Write("Data Found");
 
                 return person;
             }
-            
+
         }
         catch (Exception ex)
         {
@@ -142,46 +142,65 @@ public class DataServicePerson
     {
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
         using var connection = new NpgsqlConnection(connectionString);
-        
+
         try
         {
             connection.Open();
             Console.WriteLine("Sucess\n");
 
-            using var cmd = new NpgsqlCommand(" '" + id + "' ", connection);
+            List<Title> titles = new List<Title>();
+            List<Person> persons = new List<Person>();
 
-            using var reader = cmd.ExecuteReader();
+            //= nconst needs change
+            using (var cmd = new NpgsqlCommand("SELECT tb.primarytitle FROM known_for kf JOIN title_basics tb ON kf.tconst = tb.tconst WHERE kf.nconst = 'nm0000138';'" + Nconst + "' ", connection))
 
+            using (var reader = cmd.ExecuteReader())
             {
-                
                 while (reader.Read())
                 {
-                    
                     Title title = new Title
-                    {
-                        Tconst = reader.GetString(1), 
-                        PrimaryTitle = reader.GetString(2) 
-                    };
 
-                    
-                    Person person = new Person
                     {
-                        PrimaryName = reader.GetString(0), 
-                                                           
-                        PrimaryTitle = title.PrimaryTitle
+                        Tconst = reader.GetString(1),
+                        PrimaryTitle = reader.GetString(0)
                     };
-
-                    
                     titles.Add(title);
-                    persons.Add(person);
+
                 }
             }
+
+
+            using (var cmd = new NpgsqlCommand("SELECT primaryname FROM name_basics WHERE nconst = 'nm0001268';'"))
+
+             cmd.Parameters.AddWithValue("nconst", "nm0000138");
+
+            using (var reader = cmd.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    foreach (var title in titles)
+
+                    {
+                        Person person = new Person
+                        {
+                            Primaryname = reader.GetString(1),
+                        };
+                        persons.Add(person);
+                    }
+                }
+
+            }  
+            
+            return new { titles = titles, persons = persons };  
         }
 
 
-        catch { }
+        catch 
+        {
+            return null;
+        }
 
-        return null;
+        
     }
 
 
