@@ -28,6 +28,7 @@ public class DataServicePerson : IDataServicePerson
         //DataServiceTitle.FindEpisodesFromSeriesTconst("tt0108778");
 
     }
+
     public static void retrieve_data()
     {
 
@@ -202,6 +203,41 @@ public class DataServicePerson : IDataServicePerson
         }
 
         
+    }
+    public IList<Person> SearchByName(string name)
+    {
+        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+        IList<Person> persons = new List <Person>();
+
+        using var connection = new NpgsqlConnection(connectionString);
+
+        try
+        {
+            connection.Open();
+            Console.WriteLine("Connection successful. ");
+
+            using var cmd = new NpgsqlCommand("SELECT nconst, primaryname, birthyear FROM name_basics WHERE primaryname ILIKE @name", connection);
+            cmd.Parameters.AddWithValue("@name", $"%{name}%");
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                Person person = new Person()
+                {
+                    Nconst = reader.GetString(0),
+                    Primaryname = reader.GetString(1),
+                    Birthyear = reader.GetString(2),
+                };
+
+                persons.Add(person);
+
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+        return persons;
     }
 
 }
