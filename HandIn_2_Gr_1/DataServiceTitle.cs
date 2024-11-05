@@ -60,8 +60,56 @@ namespace HandIn_2_Gr_1
             
         }
 
-        
+
+        public static IList<Title> TitleRatingFromTconst(string ParentTconst)
+        {
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+            using var connection = new NpgsqlConnection(connectionString);
+
+           
+            IList<Title> Avgrating = new List<Title>();
+
+            try
+            {
+                connection.Open();
+                Console.WriteLine("Success\n");
+
+                using var cmd = new NpgsqlCommand("SELECT tconst, averagerating from title_ratings where tconst = " + ParentTconst + "';", connection);
+
+
+                using var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Title rating = new Title
+                    {
+                        Tconst = reader.GetString(0),
+                        Averagerating = reader.GetDouble(1)
+                    };
+
+                    Avgrating.Add(rating);  // Use Add with a capital "A"
+                }
+
+                return Avgrating;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+                return null;
+            }
+
+        }
+
+
+
 
 
     }
+
+
+
+
+ 
+
+   
 }
