@@ -53,6 +53,36 @@ namespace HandIn_2_Gr_1
 
 
         }
+       public IList<User> SearchUser(string username, string useremail)
+        {
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+            IList<User> foundUsers = new List<User>();
 
+            using var connection = new NpgsqlConnection( connectionString);
+            try
+            {
+                connection.Open();
+                Console.WriteLine("Database connection succesful! ");
+
+                string query = "SELECT username, useremail FROM Users WHERE username ILIKE @SearchTerm or useremail ILIKE @SearchTerm;" ;
+                using var cmd = new NpgsqlCommand(query, connection);
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    User user = new User();
+                    {
+                        username = reader.GetString(0);
+                        useremail = reader.GetString(1);
+                    };
+                    foundUsers.Add(user);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            return foundUsers;
+
+        }
     }
 }
