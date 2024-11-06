@@ -7,6 +7,8 @@ namespace xUnit_Handin_2
 {
     public class DataServicePersonTest
     {
+
+        // The Following test is coded with help from Co-Pilot
         [Fact]
         public void GetPerson_ValidID_ReturnsPerson()
         {
@@ -23,6 +25,8 @@ namespace xUnit_Handin_2
             Assert.IsType<string>(result.Birthyear);
 
         }
+
+        // The Following test is coded with help from Co-Pilot
         [Fact]
         public void GetPerson_InvalidID_ReturnsNull()
         {
@@ -34,6 +38,8 @@ namespace xUnit_Handin_2
             Assert.Null(result);
 
         }
+
+        // The Following test is coded with help from Co-Pilot
         [Fact]
         public void SearchByProfession_ValidProfession_ReturnsPeople()
         {
@@ -45,6 +51,8 @@ namespace xUnit_Handin_2
             Assert.NotEmpty(profession);
             Assert.All(result, person => Assert.IsNotType<Person>(person));
         }
+
+        // The Following test is coded with help from Co-Pilot
         [Fact]
         public void SearchByProfession_InvalidProfession_ReturnsEmptyList()
         {
@@ -57,7 +65,9 @@ namespace xUnit_Handin_2
             Assert.Empty(result);
         }
 
-        // Tests wether or not the name of a specific person is correct
+
+
+        
         [Fact]
         public void CheckNameOnPerson()
         {
@@ -67,20 +77,9 @@ namespace xUnit_Handin_2
             Assert.Equal("María Alejandra Mosquera", person.Primaryname);
         }
 
-        /*
-
-        [Fact]
-        public void FindKnowForTitles_InvalidNconst_ReturnsEmptyList()
-        {
-            var invalidNconst = "nm10000000000000";
-            var result = DataServicePerson.FindKnownForTitles(invalidNconst);
-
-            Assert.NotNull(result);
-            Assert.Empty(result);
-        }
-        */
 
 
+        // The Following test is coded with help from Co-Pilot
         [Fact]
         public void SearchByProfession_EmptyProfession_ReturnsEmptyList()
         {
@@ -94,7 +93,7 @@ namespace xUnit_Handin_2
         }
 
 
-        // Tests wether or not a specific episode of a tv-series is returned, and tests the name of it
+        
         [Fact]
         public void CheckEpisodesOnTConst()
         {
@@ -105,7 +104,6 @@ namespace xUnit_Handin_2
             Title episode = titleList[0];
             Assert.Equal("The One Where Chandler Can't Remember Which Sister", episode.PrimaryTitle);
         }
-
 
     }
 }

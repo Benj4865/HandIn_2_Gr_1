@@ -53,6 +53,9 @@ namespace HandIn_2_Gr_1
 
 
         }
+
+
+        // The Following function is coded with help from Co-Pilot
         public IList<User> SearchUser(string username, string useremail, int userid)
         {
             //Define the connection string with PostgreSQL credentials and database name.
@@ -97,6 +100,7 @@ namespace HandIn_2_Gr_1
 
         }
 
+        // The Following function is coded with help from Co-Pilot
         public void LogSearchHistory(int userid, string searchvalue)
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -120,6 +124,7 @@ namespace HandIn_2_Gr_1
             }
         }
 
+        // The Following function is coded with help from Co-Pilot
         public IList<string> ShowSearchHistory(int userid)
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -146,6 +151,8 @@ namespace HandIn_2_Gr_1
             }
             return searchHistory;
         }
+
+        // The Following function is coded with help from Co-Pilot
         public bool UserProfile(string username, string userpassword, string useremail)
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -183,18 +190,18 @@ namespace HandIn_2_Gr_1
                 cmdInsert.Parameters.AddWithValue("Email", useremail);
 
                 int rowsAffected = cmdInsert.ExecuteNonQuery();
+
                 return rowsAffected > 0;
 
-                Console.WriteLine("User successfully created! ");
-
-                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
+
                 return false;
             }
         }
+
     }
 }
 

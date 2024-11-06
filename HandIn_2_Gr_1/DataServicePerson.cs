@@ -22,13 +22,11 @@ public class DataServicePerson : IDataServicePerson
     public static IList<Title>? titleList = new List<Title>();
 
 
-
     public static void Main(string[] args)
     {
         //retrieve_data();
         //GetPerson("nm11345295");
         //DataServiceTitle.FindEpisodesFromSeriesTconst("tt0108778");
-
     }
 
     public static void retrieve_data()
@@ -134,9 +132,6 @@ public class DataServicePerson : IDataServicePerson
         catch (Exception ex)
         {
         }
-
-
-
 
         return null;
 
