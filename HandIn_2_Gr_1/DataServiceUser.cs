@@ -197,6 +197,3 @@ namespace HandIn_2_Gr_1
         }
     }
 }
-
-
-
