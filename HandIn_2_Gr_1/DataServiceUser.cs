@@ -41,8 +41,8 @@ namespace HandIn_2_Gr_1
 
                     UserList.Add(user);
 
-                    return UserList;
                 }
+                return UserList;
 
             }
             catch (Exception ex)
@@ -53,13 +53,15 @@ namespace HandIn_2_Gr_1
 
 
         }
-        public IList<User> SearchUser(string username, string useremail)
+        public IList<User> SearchUser(string username, string useremail, int userid)
         {
             //Define the connection string with PostgreSQL credentials and database name.
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
 
             //Creates list to hold the found users.
             IList<User> foundUsers = new List<User>();
+
+            string searchvalue = !string.IsNullOrEmpty(username) ? username : useremail;
 
             //Initializing a connections with the database.
             using var connection = new NpgsqlConnection(connectionString);
@@ -85,6 +87,7 @@ namespace HandIn_2_Gr_1
                     };
                     foundUsers.Add(user);
                 }
+                LogSearchHistory(userid, searchvalue);
             }
             catch (Exception ex)
             {
@@ -93,7 +96,57 @@ namespace HandIn_2_Gr_1
             return foundUsers;
 
         }
-        public bool CreateUser(string username, string userpassword, string useremail)
+
+        public void LogSearchHistory(int userid, string searchvalue)
+        {
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+
+            using var connection = new NpgsqlConnection(connectionString);
+            try
+            {
+                connection.Open();
+                Console.WriteLine("Logging search term...");
+
+                string query = "INSERT INTO SearchHistory (userid, searchvalue) VALUES (@userid, @searchvalue);";
+                using var cmd = new NpgsqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("userid", userid);
+                cmd.Parameters.AddWithValue("searchvalue", searchvalue);
+                cmd.ExecuteNonQuery();
+                Console.WriteLine("Search term logged successfully");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error logging search history: {ex.Message}");
+            }
+        }
+
+        public IList<string> ShowSearchHistory(int userid)
+        {
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+            IList<string> searchHistory = new List<string>();
+            using var connection = new NpgsqlConnection(connectionString);
+            try
+            {
+                connection.Open();
+                Console.WriteLine("Retrieving search history...");
+                string query = "SELECT searchvalue FROM SearchHistory WHERE userid = @userid ORDER BY search_date DESC;";
+                using var cmd = new NpgsqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("userid", userid);
+
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    string searchValue = reader.GetString(0);
+                    searchHistory.Add(searchValue);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving search history: {ex.Message}");
+            }
+            return searchHistory;
+        }
+        public bool UserProfile(string username, string userpassword, string useremail)
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
 
@@ -122,13 +175,13 @@ namespace HandIn_2_Gr_1
                 }
 
                 string query = "INSERT INTO Users (username, userpassword, useremail) VALUES (@Username, @Password, @Email);";
-                
+
                 using var cmdInsert = new NpgsqlCommand(query, connection);
                 cmdInsert.Parameters.AddWithValue("userId", newUserId);
                 cmdInsert.Parameters.AddWithValue("Username", username);
                 cmdInsert.Parameters.AddWithValue("Password", userpassword);
                 cmdInsert.Parameters.AddWithValue("Email", useremail);
-                
+
                 int rowsAffected = cmdInsert.ExecuteNonQuery();
                 return rowsAffected > 0;
 
@@ -138,9 +191,12 @@ namespace HandIn_2_Gr_1
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occured: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
                 return false;
             }
         }
     }
 }
+
+
+
