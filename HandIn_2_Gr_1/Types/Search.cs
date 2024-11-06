@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace HandIn_2_Gr_1.Types
 {
-    public class Genre
+    internal class Search
     {
-
-        public int Tconst { get; set; } 
-        public string? GenreName { get; set; }
-
+        //Class du handle the search logic from the application to the database. 
     }
 }
