@@ -140,7 +140,7 @@ public class DataServicePerson : IDataServicePerson
 
     }
 
-    
+
     public static IList<Title> FindKnownForTitles(string Nconst)
     {
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -187,27 +187,27 @@ public class DataServicePerson : IDataServicePerson
                             Primaryname = reader.GetString(0),
                         };
                         persons.Add(person);
-                        
+
                     }
                 }
 
             }
 
             return titles;
-            
+
         }
 
-        catch 
+        catch
         {
             return null;
         }
 
-        
+
     }
     public IList<Person> SearchByName(string name)
     {
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
-        IList<Person> persons = new List <Person>();
+        IList<Person> persons = new List<Person>();
 
         using var connection = new NpgsqlConnection(connectionString);
 
@@ -240,6 +240,40 @@ public class DataServicePerson : IDataServicePerson
         return persons;
     }
 
+    public IList<Title> SearchForMovieByTconst(string tconst)
+    {
+        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+        using var connection = new NpgsqlConnection(connectionString);
+
+        try
+        {
+            connection.Open();
+            Console.WriteLine("Sucess\n");
+
+            List<Title> titles = new List<Title>();
+
+            using var cmd = new NpgsqlCommand("SELECT tconst, primarytitle FROM title_basics where tconst ='tt17156444';", connection);
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                Title title = new Title
+                {
+                    PrimaryTitle = reader.GetString(1)
+                };
+
+                titles.Add(title);
+
+            }
+            return titles;
+        }
+
+        catch
+        {
+
+        }
+       
+    }
 }
 
 // SELECT t.nconst, t.profession, s.primaryname FROM nm_professions t INNER JOIN name_basics s ON t.nconst = s.nconst where t.nconst = 'nm0006035';
