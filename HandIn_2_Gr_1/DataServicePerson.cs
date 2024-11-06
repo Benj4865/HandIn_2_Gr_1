@@ -6,6 +6,8 @@ using System;
 using System.IO;
 using HandIn_2_Gr_1.Types;
 using System.Security.Cryptography;
+using System.Reflection.Metadata.Ecma335;
+using System.Diagnostics.Metrics;
 
 
 namespace HandIn_2_Gr_1;
@@ -61,7 +63,7 @@ public class DataServicePerson : IDataServicePerson
         }
     } // Can be deleted after DataService Completion
 
-    public Person GetPerson(string nconst)
+    public static Person GetPerson(string nconst)
     {
 
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -275,6 +277,8 @@ public class DataServicePerson : IDataServicePerson
         {
 
         }
+
+        return null;
        
     }
 
@@ -302,13 +306,16 @@ public class DataServicePerson : IDataServicePerson
             }
             
         }
-
         catch
         {
 
         }
 
+        return null;
+
     }
+
+    
 
     
 }
