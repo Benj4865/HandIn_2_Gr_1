@@ -9,7 +9,7 @@ namespace HandIn_2_Gr_1
 {
     public interface IDataServicePerson 
     {
-        Person GetPerson(string nconst);
+        public Person GetPerson(string nconst);
 
     }
 }

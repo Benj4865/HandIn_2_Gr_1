@@ -63,7 +63,7 @@ public class DataServicePerson : IDataServicePerson
         }
     } // Can be deleted after DataService Completion
 
-    public static Person GetPerson(string nconst)
+    public Person GetPerson(string nconst)
     {
 
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";

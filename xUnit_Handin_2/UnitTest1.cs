@@ -13,7 +13,7 @@ namespace xUnit_Handin_2
             var validId = "nm0000001 "; //Id exists = Fred Astaire
             var service = new DataServicePerson();
 
-            var result = DataServicePerson.GetPerson(validId);
+            var result = service.GetPerson(validId);
 
             Assert.NotNull(result);
             Assert.Equal(validId, result.Nconst);
@@ -26,12 +26,13 @@ namespace xUnit_Handin_2
         [Fact]
         public void GetPerson_InvalidID_ReturnsNull()
         {
-            var invalidId = "nm10000000000000"; //Non existing ID
+            string invalidId = "nm10000000000000"; //Non existing ID
             var service = new DataServicePerson();
 
-            var result = DataServicePerson.GetPerson(invalidId);
+            Person result = service.GetPerson(invalidId);
 
             Assert.Null(result);
+
         }
         [Fact]
         public void SearchByProfession_ValidProfession_ReturnsPeople()
@@ -61,7 +62,7 @@ namespace xUnit_Handin_2
         public void CheckNameOnPerson()
         {
             var Service = new DataServicePerson();
-            var person = DataServicePerson.GetPerson("nm11345295");
+            var person = Service.GetPerson("nm11345295");
             Assert.NotNull(person);
             Assert.Equal("María Alejandra Mosquera", person.Primaryname);
         }
@@ -79,17 +80,6 @@ namespace xUnit_Handin_2
         }
         */
 
-        // ------------------------------------------------------ test below, makes no sense
-        /*
-        [Fact]
-        public void GetPerson_NullID_ThrowsArgumentNullException()
-        {
-            string nullId = null;
-            var exception = Assert.Throws<ArgumentNullException>(() => DataServicePerson.GetPerson(nullId));
-            Assert.Equal("Value cannot be null.(Parameter 'id')", exception.Message);
-        }
-        */
-        // ------------------------------------------------------ test above, makes no sense
 
         [Fact]
         public void SearchByProfession_EmptyProfession_ReturnsEmptyList()
