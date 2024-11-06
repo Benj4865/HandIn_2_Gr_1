@@ -204,6 +204,9 @@ public class DataServicePerson : IDataServicePerson
 
 
     }
+
+
+    //måske rykke alt efer det her til en Search class
     public IList<Person> SearchByName(string name)
     {
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -274,6 +277,40 @@ public class DataServicePerson : IDataServicePerson
         }
        
     }
+
+    public IList<Title> SearchByTitle(string PrimaryTitle)
+    {
+        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+        using var connection = new NpgsqlConnection(connectionString);
+
+        try
+        {
+            connection.Open();
+            Console.WriteLine("Sucess\n");
+
+            List<Title> titles = new List<Title>();
+
+            using var cmd = new NpgsqlCommand("SELECT * FROM title_basics WHERE primarytitle = @primarytitle;", connection);
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                Console.WriteLine("Primary title" + reader["primarytitle"]);
+                Console.WriteLine("Genres" + reader["genres"]);
+                Console.WriteLine("Release year" + reader["startyear"]);
+
+            }
+            
+        }
+
+        catch
+        {
+
+        }
+
+    }
+
+    
 }
 
 // SELECT t.nconst, t.profession, s.primaryname FROM nm_professions t INNER JOIN name_basics s ON t.nconst = s.nconst where t.nconst = 'nm0006035';
