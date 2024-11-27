@@ -46,10 +46,12 @@ namespace xUnit_Handin_2
             var profession = "actor";
             var service = new DataServicePerson();
             var result = service.SearchByProfession(profession);
+            // IList<Title> titleList = DataServiceTitle.FindEpisodesFromSeriesTconst("tt0108778");
 
             Assert.NotNull(result);
-            Assert.NotEmpty(profession);
-            Assert.All(result, person => Assert.IsNotType<Person>(person));
+            var person = result[0];
+            Assert.NotEmpty(result[0].Primaryname);
+            
         }
 
         // The Following test is coded with help from Co-Pilot
@@ -64,8 +66,6 @@ namespace xUnit_Handin_2
             Assert.NotNull(result);
             Assert.Empty(result);
         }
-
-
 
         
         [Fact]

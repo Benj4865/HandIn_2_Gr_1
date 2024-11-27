@@ -21,7 +21,6 @@ public class DataServicePerson : IDataServicePerson
     public IList<Person> PersonList = new List<Person>();
     public static IList<Title>? titleList = new List<Title>();
 
-
     public static void Main(string[] args)
     {
         //retrieve_data();
@@ -111,18 +110,29 @@ public class DataServicePerson : IDataServicePerson
             connection.Open();
             Console.WriteLine("Sucess\n");
 
-            using var cmd = new NpgsqlCommand("SELECT nconst, primaryname, birthyear FROM name_basics WHERE nconst = '" + professionname + "' ", connection);
+            using var cmd = new NpgsqlCommand("SELECT primaryname, name_basics.nconst, nm_professions.profession FROM name_basics INNER JOIN nm_professions ON name_basics.nconst = nm_professions.nconst WHERE nm_professions.profession = '" + professionname + "' Limit 10;", connection);
 
             using var reader = cmd.ExecuteReader();
 
 
             while (reader.Read())
             {
+                var profession = new Professions()
+                {
+                    professionName = reader.GetString(2)
+                };
+
+                // the ProfessionList object for the person is created at filled
+                var professionList2 = new List<Professions>
+                {
+                    profession
+                };
+
                 Person Person = new Person()
                 {
-                    Nconst = reader.GetString(0),
-                    Primaryname = reader.GetString(1),
-                    Birthyear = reader.GetString(2)
+                    Primaryname = reader.GetString(0),
+                    Nconst = reader.GetString(1),
+                    Primaryprofessions = professionList2
                 };
 
                 PersonList.Add(Person);
@@ -133,7 +143,7 @@ public class DataServicePerson : IDataServicePerson
         {
         }
 
-        return null;
+        return PersonList;
 
     }
 
@@ -309,9 +319,6 @@ public class DataServicePerson : IDataServicePerson
         return null;
 
     }
-
-    
-
     
 }
 
