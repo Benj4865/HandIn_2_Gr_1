@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace HandIn_2_Gr_1
 {
@@ -33,7 +34,7 @@ namespace HandIn_2_Gr_1
 
                 using var reader = cmd.ExecuteReader();
 
-                
+
 
                 while (reader.Read())
                 {
@@ -46,18 +47,18 @@ namespace HandIn_2_Gr_1
 
                     Console.WriteLine(title.Tconst + ", " + title.PrimaryTitle);
                     titleList.Add(title);
-                   
+
                 }
                 return titleList;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Something went wrong");
-                
+
             }
 
             return null;
-            
+
         }
 
 
@@ -66,7 +67,7 @@ namespace HandIn_2_Gr_1
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
             using var connection = new NpgsqlConnection(connectionString);
 
-           
+
             IList<Title> Avgrating = new List<Title>();
 
             try
@@ -100,16 +101,50 @@ namespace HandIn_2_Gr_1
 
         }
 
+        public static IList<Title> ListOftitlesBasedOnRating(IList<Title>? titleList)
+        {
+
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+            using var connection = new NpgsqlConnection(connectionString);
+
+            try
+            {
+                connection.Open();
+                Console.WriteLine("Sucess\n");
+
+
+                using var cmd = new NpgsqlCommand("SELECT tconst, averagerating FROM title_ratings WHERE numvotes >= 3070 ORDER BY averagerating DESC LIMIT 100;");
+
+                using var reader = cmd.ExecuteReader();
 
 
 
+                while (reader.Read())
+                {
+                    Title title = new Title
+                    {
+                        Tconst = reader.GetString(0),
+                        Averagerating = reader.GetDouble(1)
+                    };
+                    titleList.Add(title);
 
-    }
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Something went wrong");
 
+            }
 
+            return titleList;
+
+        }
+    }       
+}
 
 
  
 
    
-}
+

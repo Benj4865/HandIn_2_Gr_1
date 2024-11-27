@@ -213,7 +213,7 @@ public class DataServicePerson : IDataServicePerson
     }
 
 
-    //måske rykke alt efer det her til en Search class
+    //Maybe make a DataServiceSearch
     public IList<Person> SearchByName(string name)
     {
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
