@@ -123,6 +123,7 @@ public class DataServicePerson : IDataServicePerson
                 };
 
                 // the ProfessionList object for the person is created at filled
+                // We dont fill out the nconst in the professions class, as it is already found through the Person Object
                 var professionList2 = new List<Professions>
                 {
                     profession
@@ -148,7 +149,7 @@ public class DataServicePerson : IDataServicePerson
     }
 
 
-    public static IList<Title> FindKnownForTitles(string Nconst)
+    public IList<Title> FindKnownForTitles(string Nconst)
     {
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
         using var connection = new NpgsqlConnection(connectionString);
@@ -161,8 +162,8 @@ public class DataServicePerson : IDataServicePerson
             List<Title> titles = new List<Title>();
             List<Person> persons = new List<Person>();
 
-            //= nconst needs change
-            using (var cmd = new NpgsqlCommand("SELECT tb.primarytitle FROM known_for kf JOIN title_basics tb ON kf.tconst = tb.tconst WHERE kf.nconst = 'nm0000138';'" + Nconst + "' ", connection))
+            
+            using (var cmd = new NpgsqlCommand("SELECT known_for.tconst, title_basics.primarytitle FROM known_for INNER JOIN title_basics ON known_for.tconst = title_basics.tconst WHERE known_for.nconst = '" + Nconst + "' ", connection))
 
             using (var reader = cmd.ExecuteReader())
             {
@@ -178,10 +179,12 @@ public class DataServicePerson : IDataServicePerson
                 }
             }
 
+            return titles;
 
-            using (var cmd = new NpgsqlCommand("SELECT primaryname FROM name_basics WHERE nconst = 'nm0001268';'"))
 
+            // using (var cmd = new NpgsqlCommand("SELECT primaryname FROM name_basics WHERE nconst = 'nm0001268';'"))
 
+            /*
             using (var reader = cmd.ExecuteReader())
             {
                 if (reader.Read())
@@ -198,9 +201,7 @@ public class DataServicePerson : IDataServicePerson
                     }
                 }
 
-            }
-
-            return titles;
+            }*/
 
         }
 
@@ -320,6 +321,7 @@ public class DataServicePerson : IDataServicePerson
 
     }
     
+
 }
 
 // SELECT t.nconst, t.profession, s.primaryname FROM nm_professions t INNER JOIN name_basics s ON t.nconst = s.nconst where t.nconst = 'nm0006035';

@@ -34,6 +34,13 @@ namespace WebAPI.Controllers
             return Ok(persons);
         }
 
+        [HttpGet("knownfor/{NConst}")]
+        public IActionResult FindKnownForTitles(string NConst)
+        {
+            var persons = DataService.FindKnownForTitles(NConst);
+            return Ok(persons);
+        }
+
     }
 
     
