@@ -27,5 +27,13 @@ namespace WebAPI.Controllers
             return Ok(users);
         }
 
+        [HttpGet("createuser/{Type Ok, to confirm creation}")]
+        public IActionResult CreateUser(int userID, string username, string password, string email)
+        {
+            DataService.CreateUser(userID, username, password, email);
+            return Ok();
+        }
+
+
     }
 }

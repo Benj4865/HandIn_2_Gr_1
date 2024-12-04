@@ -12,5 +12,7 @@ namespace HandIn_2_Gr_1
 
         IList<User> GetUsers();
 
+        void CreateUser(int userID, string userName, string password, string useremail);
+
     }
 }

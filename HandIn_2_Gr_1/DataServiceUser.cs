@@ -1,6 +1,7 @@
 ﻿using HandIn_2_Gr_1.Types;
 using Npgsql;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,6 +55,55 @@ namespace HandIn_2_Gr_1
 
         }
 
+        //This method does not yet check for existing userames when making a new user.
+        //Should be implemented later
+        public void CreateUser(int userID, string userName, string password, string useremail)
+        {
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+
+            using var connection = new NpgsqlConnection(connectionString);
+            try
+            {
+                connection.Open();
+
+                string query = "INSERT INTO Users (userid, username, userpassword, useremail) VALUES (@userID, @username, @userpassword, @useremail);";
+                using var cmd = new NpgsqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("userID", userID);
+                cmd.Parameters.AddWithValue("username", userName);
+                cmd.Parameters.AddWithValue("userpassword", password);
+                cmd.Parameters.AddWithValue("useremail", useremail);
+                cmd.ExecuteNonQuery();
+
+            }
+            catch
+            {
+                
+            }
+        }
+
+        public void DeleteUser(int userID, string userName, string password)
+        {
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+
+            using var connection = new NpgsqlConnection(connectionString);
+            try
+            {
+                connection.Open();
+
+                string query = "INSERT INTO Users (userid, username, userpassword, useremail) VALUES (@userID, @username, @userpassword, @useremail);";
+                using var cmd = new NpgsqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("userID", userID);
+                cmd.Parameters.AddWithValue("username", userName);
+                cmd.Parameters.AddWithValue("userpassword", password);
+                //cmd.Parameters.AddWithValue("useremail", useremail);
+                cmd.ExecuteNonQuery();
+
+            }
+            catch
+            {
+
+            }
+        }
 
         // The Following function is coded with help from Co-Pilot
         public IList<User> SearchUser(string username, string useremail, int userid)
