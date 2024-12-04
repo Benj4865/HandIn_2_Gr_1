@@ -81,7 +81,7 @@ namespace HandIn_2_Gr_1
             }
         }
 
-        public void DeleteUser(int userID, string userName, string password)
+        public void DeleteUser(int userID, string password)
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
 
@@ -90,20 +90,20 @@ namespace HandIn_2_Gr_1
             {
                 connection.Open();
 
-                string query = "INSERT INTO Users (userid, username, userpassword, useremail) VALUES (@userID, @username, @userpassword, @useremail);";
+                // Corrected query
+                string query = "DELETE FROM Users WHERE userid = '" + userID + "' AND userpassword = '" + password + "';";
+
                 using var cmd = new NpgsqlCommand(query, connection);
-                cmd.Parameters.AddWithValue("userID", userID);
-                cmd.Parameters.AddWithValue("username", userName);
-                cmd.Parameters.AddWithValue("userpassword", password);
-                //cmd.Parameters.AddWithValue("useremail", useremail);
-                cmd.ExecuteNonQuery();
 
+                // Execute the command
+                int rowsAffected = cmd.ExecuteNonQuery();
+                
             }
-            catch
+            catch (Exception ex)
             {
-
             }
         }
+
 
         // The Following function is coded with help from Co-Pilot
         public IList<User> SearchUser(string username, string useremail, int userid)

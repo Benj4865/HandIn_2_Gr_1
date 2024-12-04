@@ -35,5 +35,13 @@ namespace WebAPI.Controllers
         }
 
 
+        [HttpGet("deleteuser/{Type Ok, to confirm deletion}")]
+        public IActionResult DeleteUser(int userID, string password)
+        {
+            DataService.DeleteUser(userID, password);
+            return Ok();
+        }
+
+
     }
 }
