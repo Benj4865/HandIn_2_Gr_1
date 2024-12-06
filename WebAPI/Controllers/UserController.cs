@@ -20,7 +20,7 @@ namespace WebAPI.Controllers
             _linkGenerator = linkGenerator;
         }
 
-        [HttpGet]
+        [HttpGet("getuser/")]
         public IActionResult GetUsers()
         {
             var users = DataService.GetUsers();

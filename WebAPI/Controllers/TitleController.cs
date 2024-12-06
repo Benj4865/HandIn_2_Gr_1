@@ -1,4 +1,5 @@
 ﻿using HandIn_2_Gr_1;
+using HandIn_2_Gr_1.Types;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -7,7 +8,6 @@ namespace WebAPI.Controllers
     [Route("api/title")]
     public class TitleController : ControllerBase
     {
-
         IDataServiceTitle DataService;
         private readonly LinkGenerator _linkGenerator;
 
@@ -18,14 +18,14 @@ namespace WebAPI.Controllers
             DataService = dataService;
             _linkGenerator = linkGenerator;
         }
-        /*
-        [HttpGet("knownfor/{NConst}")]
-        public IActionResult FindKnownForTitles(string NConst)
+        
+        [HttpGet]
+        public IActionResult SearchTitleByName(string name)
         {
-            var persons = DataService.FindKnownForTitles(NConst);
-            return Ok(persons);
+            var title = DataService.SearchTitleByName(name);
+            return Ok(title);
         }
-        */
+        
     }
 }
 

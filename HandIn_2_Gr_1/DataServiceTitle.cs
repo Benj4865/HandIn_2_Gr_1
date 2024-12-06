@@ -18,6 +18,45 @@ namespace HandIn_2_Gr_1
 
         public static IList<Title>? titleList = new List<Title>();
 
+        public Title SearchTitleByName(string name)
+        {
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+            using var connection = new NpgsqlConnection(connectionString);
+
+
+            try
+            {
+                connection.Open();
+                Console.WriteLine("Sucess\n");
+
+
+                using var cmd = new NpgsqlCommand("SELECT primarytitle FROM title_basics WHERE primarytitle = '" + name + "';", connection);
+                using var reader = cmd.ExecuteReader();
+                //cmd.Parameters.AddWithValue("userID", userID);
+
+                Title title = new Title{};
+
+                while (reader.Read())
+                {
+                    title.PrimaryTitle = reader.GetString(0);
+                    
+
+                    
+                }
+
+                return title;
+
+            }
+            catch
+            {
+
+            }
+
+
+
+                return null;
+        }
+
         public static IList<Title> FindEpisodesFromSeriesTconst(string ParentTconst)
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";

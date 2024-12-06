@@ -9,7 +9,8 @@ namespace HandIn_2_Gr_1
 {
     public interface IDataServiceTitle
     {
-        
+
+        public Title SearchTitleByName(string name);
 
 
     }
