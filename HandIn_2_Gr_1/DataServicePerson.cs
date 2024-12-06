@@ -23,44 +23,10 @@ public class DataServicePerson : IDataServicePerson
 
     public static void Main(string[] args)
     {
-        //retrieve_data();
-        //GetPerson("nm11345295");
-        //DataServiceTitle.FindEpisodesFromSeriesTconst("tt0108778");
+       
     }
 
-    public static void retrieve_data()
-    {
-
-
-        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
-        using var connection = new NpgsqlConnection(connectionString);
-
-        try
-        {
-            connection.Open();
-            Console.WriteLine("Sucess\n");
-
-
-
-            using var cmd = new NpgsqlCommand("SELECT nconst, primaryname, birthyear FROM name_basics WHERE nconst = 'nm11345295' ", connection);
-
-            using var reader = cmd.ExecuteReader();
-
-
-            while (reader.Read())
-            {
-                string tconst = reader.GetString(0);
-                string nconst = reader.GetString(1);
-                Console.WriteLine("Tconst = " + tconst + ", Nconst = " + nconst);
-            }
-        }
-        catch (Exception ex)
-        {
-
-        }
-    } // Can be deleted after DataService Completion
-
-    public Person GetPerson(string nconst)
+    public Person GetPerson(string nconst) // Yet to be protected against injection.
     {
 
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";

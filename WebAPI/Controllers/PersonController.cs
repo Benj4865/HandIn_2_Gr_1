@@ -19,7 +19,7 @@ namespace WebAPI.Controllers
             _linkGenerator = linkGenerator;
         }
 
-        [HttpGet("{nconst}")]
+        [HttpGet("getperson/{nconst}")]
         public IActionResult GetPerson(string nconst)
         {
             var person = DataService.GetPerson(nconst);
