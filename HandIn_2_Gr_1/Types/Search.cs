@@ -9,5 +9,6 @@ namespace HandIn_2_Gr_1.Types
     internal class Search
     {
         //Class du handle the search logic from the application to the database. 
+
     }
 }
