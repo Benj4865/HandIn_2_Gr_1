@@ -25,6 +25,13 @@ namespace WebAPI.Controllers
             var person = DataService.GetPerson(nconst);
             return Ok(person);
         }
+
+        [HttpGet("getpersonname/{name}")]
+        public IActionResult SearchByName(string name)
+        {
+            var person = DataService.SearchByName(name);
+            return Ok(person);
+        }
         
 
         [HttpGet("profession/{profession}")]

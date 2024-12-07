@@ -66,6 +66,7 @@ public class DataServicePerson : IDataServicePerson
     }
 
 
+
     public IList<Person> SearchByProfession(string professionname)
     {
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -76,7 +77,7 @@ public class DataServicePerson : IDataServicePerson
             connection.Open();
             Console.WriteLine("Sucess\n");
 
-            using var cmd = new NpgsqlCommand("SELECT primaryname, name_basics.nconst, nm_professions.profession FROM name_basics INNER JOIN nm_professions ON name_basics.nconst = nm_professions.nconst WHERE nm_professions.profession = '" + professionname + "' Limit 10;", connection);
+            using var cmd = new NpgsqlCommand("SELECT name_basics.primaryname, name_basics.nconst, nm_professions.profession FROM name_basics INNER JOIN nm_professions ON name_basics.nconst = nm_professions.nconst WHERE nm_professions.profession = '" + professionname + "' Limit 10;", connection);
 
             using var reader = cmd.ExecuteReader();
 
@@ -193,17 +194,32 @@ public class DataServicePerson : IDataServicePerson
             connection.Open();
             Console.WriteLine("Connection successful. ");
 
-            using var cmd = new NpgsqlCommand("SELECT nconst, primaryname, birthyear FROM name_basics WHERE primaryname ILIKE @name", connection);
+            using var cmd = new NpgsqlCommand("SELECT name_basics.nconst, name_basics.primaryname, name_basics.birthyear, name_basics.deathyear, nm_professions.profession FROM name_basics INNER JOIN nm_professions ON name_basics.nconst = nm_professions.nconst WHERE primaryname ILIKE @name", connection); // insert, primary professions and knownFor
             cmd.Parameters.AddWithValue("@name", $"%{name}%");
 
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
+                var profession = new Professions()
+                {
+                    professionName = reader.GetString(4)
+                };
+
+                // the ProfessionList object for the person is created at filled
+                // We dont fill out the nconst in the professions class, as it is already found through the Person Object
+                var professionList4 = new List<Professions>
+                {
+                    profession
+                };
+
+
                 Person person = new Person()
                 {
                     Nconst = reader.GetString(0),
                     Primaryname = reader.GetString(1),
                     Birthyear = reader.GetString(2),
+                    Deathyear = reader.GetString(3),
+                    Primaryprofessions = professionList4
                 };
 
                 persons.Add(person);
