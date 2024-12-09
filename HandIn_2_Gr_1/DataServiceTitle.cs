@@ -10,7 +10,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace HandIn_2_Gr_1
 {
-    public class DataServiceTitle
+    public class DataServiceTitle : IDataServiceTitle
     {
 
         public static string filepath = "C:/Users/NotAtAllPostGresPW.txt";
@@ -18,6 +18,7 @@ namespace HandIn_2_Gr_1
 
         public static IList<Title>? titleList = new List<Title>();
 
+        // A list of titles need to be added, so that more that one searchresult can be returned
         public Title SearchTitleByName(string name)
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -26,29 +27,26 @@ namespace HandIn_2_Gr_1
             try
             {
                 connection.Open();
-                Console.WriteLine("Sucess\n");
 
+                string query = "SELECT primarytitle FROM title_basics WHERE primarytitle ILIKE @searchString;";
+                using var cmd = new NpgsqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("searchString", "%" + name + "%");
 
-                using var cmd = new NpgsqlCommand("SELECT primarytitle FROM title_basics WHERE primarytitle = '" + name + "';", connection);
                 using var reader = cmd.ExecuteReader();
-                //cmd.Parameters.AddWithValue("userID", userID);
 
-                Title title = new Title{};
+                Title title = new Title { };
 
                 while (reader.Read())
                 {
                     title.PrimaryTitle = reader.GetString(0);
-                    
 
-                    
                 }
                 return title;
             }
             catch
-            {
-            }
+            { }
 
-                return null;
+            return null;
         }
 
         public static IList<Title> FindEpisodesFromSeriesTconst(string ParentTconst)
@@ -162,11 +160,11 @@ namespace HandIn_2_Gr_1
             }
             return titleList;
         }
-    }       
+    }
 }
 
 
- 
 
-   
+
+
 

@@ -19,7 +19,7 @@ namespace WebAPI.Controllers
             _linkGenerator = linkGenerator;
         }
         
-        [HttpGet]
+        [HttpGet("searchtitle/")]
         public IActionResult SearchTitleByName(string name)
         {
             var title = DataService.SearchTitleByName(name);
