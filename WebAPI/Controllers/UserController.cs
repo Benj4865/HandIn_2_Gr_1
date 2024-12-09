@@ -1,6 +1,7 @@
 using HandIn_2_Gr_1;
 using HandIn_2_Gr_1.Types;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.PostModels;
 //using WebAPI.Models;
 
 namespace WebAPI.Controllers
@@ -31,6 +32,14 @@ namespace WebAPI.Controllers
         public IActionResult CreateUser(int userID, string username, string password, string email)
         {
             DataService.CreateUser(userID, username, password, email);
+            return Ok();
+        }
+
+
+        [HttpPost("updateuser/")]
+        public IActionResult UpdateUser(UpdateUserBody data)
+        {
+            DataService.UpdateUser(data.UserID, data.UserName, data.UserPassword, data.UserPassword);
             return Ok();
         }
 

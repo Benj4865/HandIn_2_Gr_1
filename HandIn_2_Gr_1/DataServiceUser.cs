@@ -76,7 +76,7 @@ namespace HandIn_2_Gr_1
             }
             catch
             {
-                
+
             }
         }
 
@@ -96,7 +96,7 @@ namespace HandIn_2_Gr_1
 
                 // Execute the command
                 int rowsAffected = cmd.ExecuteNonQuery();
-                
+
             }
             catch (Exception ex)
             {
@@ -107,7 +107,7 @@ namespace HandIn_2_Gr_1
         // The Following function is coded with help from Co-Pilot
         public IList<User> SearchUser(string username, string useremail, int userid)
         {
-            //Define the connection string with PostgreSQL credentials and database name.
+
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
 
             //Creates list to hold the found users.
@@ -120,7 +120,6 @@ namespace HandIn_2_Gr_1
             try
             {
                 connection.Open();
-                Console.WriteLine("Database connection succesful! ");
 
                 //SQL query with parameter placeholder| ILIKE used for case insensitive and % for wildcard
                 string query = "SELECT username, useremail FROM Users WHERE username ILIKE @SearchTerm or useremail ILIKE @SearchTerm;";
@@ -141,12 +140,53 @@ namespace HandIn_2_Gr_1
                 }
                 LogSearchHistory(userid, searchvalue);
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
             }
             return foundUsers;
 
+        }
+
+        public void UpdateUser(int userID, string userName, string userPassword, string userEmail)
+        {
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+
+            using var connection = new NpgsqlConnection(connectionString);
+            try
+            {
+
+                connection.Open();
+
+                if (userName.Length >= 1)
+                {
+                    string query = "UPDATE Users SET username = @username WHERE userid = @userID;";
+                    using var cmd = new NpgsqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("userID", userID);
+                    cmd.Parameters.AddWithValue("username", userName);
+                    cmd.ExecuteNonQuery();
+
+                }
+                if (userPassword.Length >= 1)
+                {
+                    string query = "UPDATE Users SET userpassword = @userpassword WHERE userid = @userID;";
+                    using var cmd = new NpgsqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("userID", userID);
+                    cmd.Parameters.AddWithValue("userpassword", userPassword);
+                    cmd.ExecuteNonQuery();
+
+                }
+                if (userEmail.Length >= 1)
+                {
+                    string query = "UPDATE Users SET useremail = @useremail WHERE userid = @userID;";
+                    using var cmd = new NpgsqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("userID", userID);
+                    cmd.Parameters.AddWithValue("useremail", userEmail);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch
+            {
+            }
         }
 
         // The Following function is coded with help from Co-Pilot
