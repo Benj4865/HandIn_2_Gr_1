@@ -27,14 +27,14 @@ namespace WebAPI.Controllers
             var users = DataService.GetUsers();
             return Ok(users);
         }
-
+        //Create
         [HttpPost("createuser/")]
         public IActionResult CreateUser(UserBody data)
         {
             DataService.CreateUser(data.UserName, data.UserPassword, data.UserEmail);
             return Ok();
         }
-
+        //Read
         [HttpGet("searchuser/")]
         public IActionResult SearchUser(string username="", string useremail ="", int userid=0)
         {
@@ -42,7 +42,7 @@ namespace WebAPI.Controllers
 
             return Ok(user);
         }
-
+        //Update
         [HttpPost("updateuser/")]
         public IActionResult UpdateUser(UserBody data)
         {
@@ -50,6 +50,7 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
+        //Delete
         [HttpPost("deleteuser/")]
         public IActionResult DeleteUser(UserBody data)
         {
