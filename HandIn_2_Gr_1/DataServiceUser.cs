@@ -167,7 +167,7 @@ namespace HandIn_2_Gr_1
                 cmd.ExecuteNonQuery();
                 Console.WriteLine("Search term logged successfully");
             }
-            catch ()
+            catch
             {
             }
         }
