@@ -43,16 +43,11 @@ namespace HandIn_2_Gr_1
 
                     
                 }
-
                 return title;
-
             }
             catch
             {
-
             }
-
-
 
                 return null;
         }
@@ -93,11 +88,8 @@ namespace HandIn_2_Gr_1
             catch (Exception ex)
             {
                 Console.WriteLine("Something went wrong");
-
             }
-
             return null;
-
         }
 
 
@@ -151,12 +143,9 @@ namespace HandIn_2_Gr_1
                 connection.Open();
                 Console.WriteLine("Sucess\n");
 
-
                 using var cmd = new NpgsqlCommand("SELECT tconst, averagerating FROM title_ratings WHERE numvotes >= 3070 ORDER BY averagerating DESC LIMIT 100;");
 
                 using var reader = cmd.ExecuteReader();
-
-
 
                 while (reader.Read())
                 {
@@ -168,7 +157,6 @@ namespace HandIn_2_Gr_1
                     titleList.Add(title);
 
                 }
-               
             }
             catch (Exception ex)
             {
