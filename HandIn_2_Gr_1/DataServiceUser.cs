@@ -31,7 +31,6 @@ namespace HandIn_2_Gr_1
 
                 using var reader = cmd.ExecuteReader();
 
-
                 while (reader.Read())
                 {
                     User user = new User()

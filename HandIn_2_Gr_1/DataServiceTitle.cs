@@ -129,7 +129,6 @@ namespace HandIn_2_Gr_1
                 Console.WriteLine("An error occurred: " + ex.Message);
                 return null;
             }
-
         }
 
         public static IList<Title> ListOftitlesBasedOnRating(IList<Title>? titleList)
@@ -163,9 +162,7 @@ namespace HandIn_2_Gr_1
                 Console.WriteLine("Something went wrong");
 
             }
-
             return titleList;
-
         }
     }       
 }
