@@ -35,11 +35,19 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
+        [HttpGet("searchuser/")]
+        public IActionResult SearchUser(string username="", string useremail ="", int userid=0)
+        {
+           var user = DataService.SearchUser(username, useremail, userid);
+
+            return Ok(user);
+        }
+
 
         [HttpPost("updateuser/")]
-        public IActionResult UpdateUser(UpdateUserBody data)
+        public IActionResult UpdateUser(UserBody data)
         {
-            DataService.UpdateUser(data.UserID, data.UserName, data.UserPassword, data.UserPassword);
+            DataService.UpdateUser(data.UserID, data.UserName, data.UserPassword, data.UserEmail);
             return Ok();
         }
 

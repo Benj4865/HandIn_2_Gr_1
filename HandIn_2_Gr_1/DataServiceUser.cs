@@ -104,46 +104,47 @@ namespace HandIn_2_Gr_1
         }
 
 
-        // The Following function is coded with help from Co-Pilot
-        public IList<User> SearchUser(string username, string useremail, int userid)
+
+        // Currently only return the last userhit from the database
+        public User SearchUser(string username, string useremail, int userID)
         {
 
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
 
-            //Creates list to hold the found users.
-            IList<User> foundUsers = new List<User>();
-
-            string searchvalue = !string.IsNullOrEmpty(username) ? username : useremail;
-
-            //Initializing a connections with the database.
             using var connection = new NpgsqlConnection(connectionString);
             try
             {
+                User user = new User();
                 connection.Open();
 
-                //SQL query with parameter placeholder| ILIKE used for case insensitive and % for wildcard
-                string query = "SELECT username, useremail FROM Users WHERE username ILIKE @SearchTerm or useremail ILIKE @SearchTerm;";
+                string query = "SELECT username, useremail FROM users WHERE username ILIKE @username OR useremail ILIKE @useremail OR userID = @userID LIMIT 1;";
 
-                //Command object for query and connection
                 using var cmd = new NpgsqlCommand(query, connection);
-                cmd.Parameters.AddWithValue("username", username);
-                cmd.Parameters.AddWithValue("useremail", useremail);
+                cmd.Parameters.AddWithValue("username", "%" + username + "%");
+                cmd.Parameters.AddWithValue("useremail", "%" + useremail + "%");
+                cmd.Parameters.AddWithValue("userID", userID);
                 using var reader = cmd.ExecuteReader();
+
                 while (reader.Read())
                 {
-                    User user = new User();
+                    user = new User()
                     {
-                        username = reader.GetString(0);
-                        useremail = reader.GetString(1);
+                        UserName = reader.GetString(0),
+                        UserEmail = reader.GetString(1)
                     };
-                    foundUsers.Add(user);
                 }
-                LogSearchHistory(userid, searchvalue);
+                
+                // Can be added again if function input is modified to also include logged in user.
+                
+                //var searchvalue = username + " " + useremail + " " + userID;
+                //LogSearchHistory(userID, searchvalue);
+
+                return user;
             }
             catch
             {
-            }
-            return foundUsers;
+                return null;
+            }            
 
         }
 
@@ -188,6 +189,8 @@ namespace HandIn_2_Gr_1
             {
             }
         }
+
+
 
         // The Following function is coded with help from Co-Pilot
         public void LogSearchHistory(int userid, string searchvalue)

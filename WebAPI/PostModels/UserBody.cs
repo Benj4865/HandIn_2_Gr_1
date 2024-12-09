@@ -1,6 +1,6 @@
 ﻿namespace WebAPI.PostModels
 {
-    public class UpdateUserBody
+    public class UserBody
     {
         public int UserID { get; set; }
         public string UserName { get; set; }
