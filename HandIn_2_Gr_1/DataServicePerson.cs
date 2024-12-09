@@ -18,6 +18,7 @@ public class DataServicePerson : IDataServicePerson
     public static string filepath = "C:/Users/NotAtAllPostGresPW.txt";
     public static string filecontent = File.ReadAllText(filepath);
 
+
     public IList<Person> PersonList = new List<Person>();
     public static IList<Title>? titleList = new List<Title>();
 
@@ -64,6 +65,78 @@ public class DataServicePerson : IDataServicePerson
 
         return null;
     }
+
+    public Person createPerson(Person newPerson)
+    {
+        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+        using var connection = new NpgsqlConnection(connectionString);
+
+        try
+        {
+            connection.Open();
+            Console.WriteLine("Sucess\n");
+
+            string maxNconst = GetMaxNconst(connection);
+            Console.WriteLine($"MaxNconst from DB: {maxNconst}");
+
+            string newNconst = GenerateNextNconst(maxNconst);
+            Console.WriteLine($"Generated new nconst: {newNconst}");
+            
+            using var cmd = new NpgsqlCommand("INSERT INTO name_basics (nconst, primaryname, birthyear, deathyear, primaryprofession) " + 
+                "VALUES (@nconst, @primaryname, @birthyear, @deathyear, @primaryprofession)" +
+                "RETURNING nconst, primaryname, birthyear, deathyear, primaryprofession ;", 
+                connection);
+
+
+            cmd.Parameters.AddWithValue("@nconst", newNconst);
+            cmd.Parameters.AddWithValue("@primaryname", newPerson.Primaryname);
+            cmd.Parameters.AddWithValue("@birthyear", newPerson.Birthyear ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@deathyear", newPerson.Deathyear ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@primaryprofession", newPerson.Primaryprofessions != null ?
+                string.Join(",", newPerson.Primaryprofessions.Select(p => p.professionName)) :
+                (object)DBNull.Value);
+
+            using var reader = cmd.ExecuteReader();
+          
+            if (reader.Read())
+            {
+                var createdPerson = new Person
+                {
+                    Nconst = reader.GetString(0),
+                    Primaryname = reader.GetString(1),
+                    Birthyear = !reader.IsDBNull(2) ? reader.GetString(2) : null,
+                    Deathyear = !reader.IsDBNull(3) ? reader.GetString(3) : null,
+                    Primaryprofessions = reader.IsDBNull(4) ?
+                        new List<Professions>()
+                        : reader.GetString(4).Split(',').Select(p => new Professions { professionName = p }).ToList()
+
+                };
+                Console.WriteLine("Person succesfully created.");
+                return createdPerson;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}\nStrackTrace: {ex.StackTrace}");
+        }
+        return null;
+    }
+    private string GetMaxNconst(NpgsqlConnection connection) 
+    {
+        using var cmd = new NpgsqlCommand("SELECT MAX(nconst) FROM name_basics", connection);
+        object result = cmd.ExecuteScalar();
+        return result != null ? result.ToString() : "nm0000000";
+    }
+    private string GenerateNextNconst(string maxNconst)
+    {
+        int numerticPart = int.Parse(maxNconst.Substring(2));
+
+        numerticPart++;
+
+        return "nm" + numerticPart.ToString("D7");
+    }
+
+
 
 
 

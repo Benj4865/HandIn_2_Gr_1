@@ -9,9 +9,14 @@ namespace HandIn_2_Gr_1
 {
     public interface IDataServicePerson 
     {
+        
+       
         public Person GetPerson(string nconst);
 
         public IList<Person> SearchByName(string name);
+        
+        public Person createPerson(Person newPerson);
+
         public IList<Person> SearchByProfession(string professionname);
 
         public IList<Title> FindKnownForTitles(string Nconst);
