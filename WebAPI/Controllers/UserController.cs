@@ -28,10 +28,10 @@ namespace WebAPI.Controllers
             return Ok(users);
         }
 
-        [HttpGet("createuser/{Type Ok, to confirm creation}")]
-        public IActionResult CreateUser(int userID, string username, string password, string email)
+        [HttpPost("createuser/")]
+        public IActionResult CreateUser(UserBody data)
         {
-            DataService.CreateUser(userID, username, password, email);
+            DataService.CreateUser(data.UserName, data.UserPassword, data.UserEmail);
             return Ok();
         }
 
@@ -43,7 +43,6 @@ namespace WebAPI.Controllers
             return Ok(user);
         }
 
-
         [HttpPost("updateuser/")]
         public IActionResult UpdateUser(UserBody data)
         {
@@ -51,14 +50,12 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
-
-        [HttpGet("deleteuser/{Type Ok, to confirm deletion}")]
-        public IActionResult DeleteUser(int userID, string password)
+        [HttpPost("deleteuser/")]
+        public IActionResult DeleteUser(UserBody data)
         {
-            DataService.DeleteUser(userID, password);
+            DataService.DeleteUser(data.UserID, data.UserPassword);
             return Ok();
         }
-
 
     }
 }

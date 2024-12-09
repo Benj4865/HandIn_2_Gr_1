@@ -17,6 +17,7 @@ namespace HandIn_2_Gr_1
 
         public static IList<User>? UserList = new List<User>();
 
+        // This function return a list of all users in database
         public IList<User> GetUsers()
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -56,7 +57,7 @@ namespace HandIn_2_Gr_1
 
         //This method does not yet check for existing userames when making a new user.
         //Should be implemented later
-        public void CreateUser(int userID, string userName, string password, string useremail)
+        public void CreateUser(string userName, string password, string useremail)
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
 
@@ -67,7 +68,7 @@ namespace HandIn_2_Gr_1
 
                 string query = "INSERT INTO Users (userid, username, userpassword, useremail) VALUES (@userID, @username, @userpassword, @useremail);";
                 using var cmd = new NpgsqlCommand(query, connection);
-                cmd.Parameters.AddWithValue("userID", userID);
+                cmd.Parameters.AddWithValue("userID", findNewUserID());
                 cmd.Parameters.AddWithValue("username", userName);
                 cmd.Parameters.AddWithValue("userpassword", password);
                 cmd.Parameters.AddWithValue("useremail", useremail);
@@ -80,6 +81,7 @@ namespace HandIn_2_Gr_1
             }
         }
 
+        // This funciton deletes a user from the input-data
         public void DeleteUser(int userID, string password)
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -104,8 +106,7 @@ namespace HandIn_2_Gr_1
         }
 
 
-
-        // Currently only return the last userhit from the database
+        // Currently only returns the last userhit from the database
         public User SearchUser(string username, string useremail, int userID)
         {
 
@@ -133,9 +134,9 @@ namespace HandIn_2_Gr_1
                         UserEmail = reader.GetString(1)
                     };
                 }
-                
+
                 // Can be added again if function input is modified to also include logged in user.
-                
+
                 //var searchvalue = username + " " + useremail + " " + userID;
                 //LogSearchHistory(userID, searchvalue);
 
@@ -144,7 +145,7 @@ namespace HandIn_2_Gr_1
             catch
             {
                 return null;
-            }            
+            }
 
         }
 
@@ -190,7 +191,34 @@ namespace HandIn_2_Gr_1
             }
         }
 
+        public int findNewUserID()
+        {
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
 
+            using var connection = new NpgsqlConnection(connectionString);
+            try
+            {
+                connection.Open();
+                string query = "Select MAX(userid) FROM users";
+                using var cmd = new NpgsqlCommand(query, connection);
+                using var reader = cmd.ExecuteReader();
+                int maxID = 0;
+                while (reader.Read())
+                {
+                    maxID = reader.GetInt32(0);
+                }
+                int NewUserID = maxID + 1;
+
+                return NewUserID;
+
+            }
+            catch
+            {
+                return (0);
+            }
+
+
+        }
 
         // The Following function is coded with help from Co-Pilot
         public void LogSearchHistory(int userid, string searchvalue)
