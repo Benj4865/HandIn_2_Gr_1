@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace HandIn_2_Gr_1
@@ -18,6 +20,57 @@ namespace HandIn_2_Gr_1
 
         public static IList<Title>? titleList = new List<Title>();
 
+
+        // Currently only supports 1 genre, and a new function is needed to  insert into title_genre
+        public Title CreateTitle(string tconst, string titletype, string primaryTitle, string originalTitle, string isAdult, string startyear, string endyear, int runtimeMinutes, string genres, string posterlink, string plot)
+        {
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+            using var connection = new NpgsqlConnection(connectionString);
+
+            try
+            {
+                if (tconst.Length < 9 || primaryTitle.Length < 1 || titletype.Length < 1)
+                {
+                    return null;
+                }
+                connection.Open();
+
+                string query = "INSERT INTO title_basics (tconst, titletype, primaryTitle, originalTitle, isAdult, startyear, endyear, runtimeMinutes, genres, posterlink, plot) VALUES (@tconst, @titletype, @primaryTitle, @originalTitle, @isAdult, @startyear, @endyear, @runtimeMinutes, @genres, @posterlink, @plot);";
+                using var cmd = new NpgsqlCommand(query, connection);
+
+                cmd.Parameters.AddWithValue("tconst", tconst);
+                cmd.Parameters.AddWithValue("titletype", titletype);
+                cmd.Parameters.AddWithValue("primaryTitle", primaryTitle);
+                cmd.Parameters.AddWithValue("originalTitle", originalTitle);
+                cmd.Parameters.AddWithValue("isAdult", isAdult);
+                cmd.Parameters.AddWithValue("startyear", startyear);
+                cmd.Parameters.AddWithValue("endyear", endyear);
+                cmd.Parameters.AddWithValue("runtimeMinutes", runtimeMinutes);
+                cmd.Parameters.AddWithValue("genres", genres);
+                cmd.Parameters.AddWithValue("posterlink", posterlink);
+                cmd.Parameters.AddWithValue("plot", plot);
+
+                Title title = new Title
+                {
+                    Tconst = tconst,
+                    TitleType = titletype,
+                    PrimaryTitle = primaryTitle,
+                    OriginalTitle = originalTitle,
+                    IsAdult = isAdult,
+                    StartYear = startyear,
+                    EndYear = endyear,
+                    RuntimeMinutes = runtimeMinutes,
+                    PosterLink = posterlink,
+                    plot = plot
+                };
+
+                return (title);
+            }
+            catch
+            {
+                return null;
+            }
+        }
         // A list of titles need to be added, so that more that one searchresult can be returned
         public Title SearchTitleByName(string name)
         {

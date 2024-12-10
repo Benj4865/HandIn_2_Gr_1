@@ -16,7 +16,7 @@ namespace HandIn_2_Gr_1.Types
 
         public string? OriginalTitle { get; set; }
 
-        public bool IsAdult { get; set; }
+        public string IsAdult { get; set; }
 
         public string? StartYear { get; set; }
 
@@ -25,6 +25,10 @@ namespace HandIn_2_Gr_1.Types
         public int RuntimeMinutes { get; set; }
 
         public IList<Genre>? Genre { get; set; }
+
+        public string PosterLink { get; set; }
+
+        public string plot {  get; set; }
 
         public double Averagerating { get; set; }
          
