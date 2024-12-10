@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace HandIn_2_Gr_1
 {
     public class DataServiceUser : IDataServiceUser
@@ -17,6 +18,7 @@ namespace HandIn_2_Gr_1
 
         public static IList<User>? UserList = new List<User>();
 
+        // This function return a list of all users in database
         public IList<User> GetUsers()
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -30,7 +32,6 @@ namespace HandIn_2_Gr_1
                 using var cmd = new NpgsqlCommand("SELECT username, useremail FROM Users;", connection);
 
                 using var reader = cmd.ExecuteReader();
-
 
                 while (reader.Read())
                 {
@@ -57,7 +58,7 @@ namespace HandIn_2_Gr_1
 
         //This method does not yet check for existing userames when making a new user.
         //Should be implemented later
-        public void CreateUser(int userID, string userName, string password, string useremail)
+        public void CreateUser(string userName, string password, string useremail)
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
 
@@ -68,7 +69,7 @@ namespace HandIn_2_Gr_1
 
                 string query = "INSERT INTO Users (userid, username, userpassword, useremail) VALUES (@userID, @username, @userpassword, @useremail);";
                 using var cmd = new NpgsqlCommand(query, connection);
-                cmd.Parameters.AddWithValue("userID", userID);
+                cmd.Parameters.AddWithValue("userID", findNewUserID());
                 cmd.Parameters.AddWithValue("username", userName);
                 cmd.Parameters.AddWithValue("userpassword", password);
                 cmd.Parameters.AddWithValue("useremail", useremail);
@@ -77,10 +78,11 @@ namespace HandIn_2_Gr_1
             }
             catch
             {
-                
+
             }
         }
 
+        // This funciton deletes a user from the input-data
         public void DeleteUser(int userID, string password)
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -97,7 +99,7 @@ namespace HandIn_2_Gr_1
 
                 // Execute the command
                 int rowsAffected = cmd.ExecuteNonQuery();
-                
+
             }
             catch (Exception ex)
             {
@@ -105,48 +107,117 @@ namespace HandIn_2_Gr_1
         }
 
 
-        // The Following function is coded with help from Co-Pilot
-        public IList<User> SearchUser(string username, string useremail, int userid)
+        // Currently only returns the last userhit from the database
+        public User SearchUser(string username, string useremail, int userID)
         {
-            //Define the connection string with PostgreSQL credentials and database name.
+
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
 
-            //Creates list to hold the found users.
-            IList<User> foundUsers = new List<User>();
+            using var connection = new NpgsqlConnection(connectionString);
+            try
+            {
+                User user = new User();
+                connection.Open();
 
-            string searchvalue = !string.IsNullOrEmpty(username) ? username : useremail;
+                string query = "SELECT username, useremail FROM users WHERE username ILIKE @username OR useremail ILIKE @useremail OR userID = @userID LIMIT 1;";
 
-            //Initializing a connections with the database.
+                using var cmd = new NpgsqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("username", "%" + username + "%");
+                cmd.Parameters.AddWithValue("useremail", "%" + useremail + "%");
+                cmd.Parameters.AddWithValue("userID", userID);
+                using var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    user = new User()
+                    {
+                        UserName = reader.GetString(0),
+                        UserEmail = reader.GetString(1)
+                    };
+                }
+
+                // Can be added again if function input is modified to also include logged in user.
+
+                //var searchvalue = username + " " + useremail + " " + userID;
+                //LogSearchHistory(userID, searchvalue);
+
+                return user;
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
+
+        public void UpdateUser(int userID, string userName, string userPassword, string userEmail)
+        {
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+
+            using var connection = new NpgsqlConnection(connectionString);
+            try
+            {
+
+                connection.Open();
+
+                if (userName.Length >= 1)
+                {
+                    string query = "UPDATE Users SET username = @username WHERE userid = @userID;";
+                    using var cmd = new NpgsqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("userID", userID);
+                    cmd.Parameters.AddWithValue("username", userName);
+                    cmd.ExecuteNonQuery();
+
+                }
+                if (userPassword.Length >= 1)
+                {
+                    string query = "UPDATE Users SET userpassword = @userpassword WHERE userid = @userID;";
+                    using var cmd = new NpgsqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("userID", userID);
+                    cmd.Parameters.AddWithValue("userpassword", userPassword);
+                    cmd.ExecuteNonQuery();
+
+                }
+                if (userEmail.Length >= 1)
+                {
+                    string query = "UPDATE Users SET useremail = @useremail WHERE userid = @userID;";
+                    using var cmd = new NpgsqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("userID", userID);
+                    cmd.Parameters.AddWithValue("useremail", userEmail);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        public int findNewUserID()
+        {
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+
             using var connection = new NpgsqlConnection(connectionString);
             try
             {
                 connection.Open();
-                Console.WriteLine("Database connection succesful! ");
-
-                //SQL query with parameter placeholder| ILIKE used for case insensitive and % for wildcard
-                string query = "SELECT username, useremail FROM Users WHERE username ILIKE @SearchTerm or useremail ILIKE @SearchTerm;";
-
-                //Command object for query and connection
+                string query = "Select MAX(userid) FROM users";
                 using var cmd = new NpgsqlCommand(query, connection);
-                cmd.Parameters.AddWithValue("username", username);
-                cmd.Parameters.AddWithValue("useremail", useremail);
                 using var reader = cmd.ExecuteReader();
+                int maxID = 0;
                 while (reader.Read())
                 {
-                    User user = new User();
-                    {
-                        username = reader.GetString(0);
-                        useremail = reader.GetString(1);
-                    };
-                    foundUsers.Add(user);
+                    maxID = reader.GetInt32(0);
                 }
-                LogSearchHistory(userid, searchvalue);
+                int NewUserID = maxID + 1;
+
+                return NewUserID;
+
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                return (0);
             }
-            return foundUsers;
+
 
         }
 
@@ -168,12 +239,12 @@ namespace HandIn_2_Gr_1
                 cmd.ExecuteNonQuery();
                 Console.WriteLine("Search term logged successfully");
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"Error logging search history: {ex.Message}");
             }
         }
 
+        
         // The Following function is coded with help from Co-Pilot
         public IList<string> ShowSearchHistory(int userid)
         {
@@ -201,56 +272,5 @@ namespace HandIn_2_Gr_1
             }
             return searchHistory;
         }
-
-        // The Following function is coded with help from Co-Pilot
-        public bool UserProfile(string username, string userpassword, string useremail)
-        {
-            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
-
-            using var connection = new NpgsqlConnection(connectionString);
-
-            try
-            {
-                connection.Open();
-                Console.WriteLine("Database connection successful!");
-
-                //To hold the data from the user
-                int UserId = 0;
-
-                //Gets the min and max userID value from the users table
-                using (var cmd = new NpgsqlCommand("SELECT COALESCE(MAX(userid),0) FROM Users;", connection))
-                {
-                    UserId = (int)cmd.ExecuteScalar();
-                }
-
-                int newUserId = UserId + 1;
-
-                if (newUserId < 1 || newUserId > 9999)
-                {
-                    Console.WriteLine("User ID limit invalid! ");
-                    return false;
-                }
-
-                string query = "INSERT INTO Users (username, userpassword, useremail) VALUES (@Username, @Password, @Email);";
-
-                using var cmdInsert = new NpgsqlCommand(query, connection);
-                cmdInsert.Parameters.AddWithValue("userId", newUserId);
-                cmdInsert.Parameters.AddWithValue("Username", username);
-                cmdInsert.Parameters.AddWithValue("Password", userpassword);
-                cmdInsert.Parameters.AddWithValue("Email", useremail);
-
-                int rowsAffected = cmdInsert.ExecuteNonQuery();
-
-                return rowsAffected > 0;
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-
-                return false;
-            }
-        }
-
     }
 }

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HandIn_2_Gr_1.Types;
 
-namespace HandIn_2_Gr_1.Types
+namespace WebAPI.PostModels
 {
-    public class Title
+    public class TitleBody
     {
+
         public string Tconst { get; set; }
 
         public string? TitleType { get; set; }
@@ -24,18 +21,19 @@ namespace HandIn_2_Gr_1.Types
 
         public int RuntimeMinutes { get; set; }
 
-        public IList<Genre>? Genre { get; set; }
+        //public IList<Genre>? Genre { get; set; }
+        public string GenreList { get; set; }
 
         public string PosterLink { get; set; }
 
-        public string plot {  get; set; }
+        public string plot { get; set; }
 
-        public double Averagerating { get; set; }
-         
-        public int NumberOfVotes { get; set; }
+        //public double Averagerating { get; set; }
+
+        //public int NumberOfVotes { get; set; }
 
         //Below is a custom attribute, indicating wether or not the title is a in a series or is a standalone movie
-        public bool IsEpisode { get; set; } = false;
+        //public bool IsEpisode { get; set; } = false;
 
 
     }

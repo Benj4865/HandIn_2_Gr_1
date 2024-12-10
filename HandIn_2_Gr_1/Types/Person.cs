@@ -20,8 +20,5 @@ namespace HandIn_2_Gr_1.Types
 
         public IList<Title> KnownFor { get; set; } = null;
 
-
     }
-
-
 }
