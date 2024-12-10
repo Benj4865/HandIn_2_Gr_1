@@ -106,7 +106,6 @@ namespace HandIn_2_Gr_1
             }
         }
 
-
         // Currently only returns the last userhit from the database
         public User SearchUser(string username, string useremail, int userID)
         {
@@ -189,6 +188,7 @@ namespace HandIn_2_Gr_1
             }
             catch
             {
+
             }
         }
 
@@ -243,7 +243,6 @@ namespace HandIn_2_Gr_1
             {
             }
         }
-
         
         // The Following function is coded with help from Co-Pilot
         public IList<string> ShowSearchHistory(int userid)

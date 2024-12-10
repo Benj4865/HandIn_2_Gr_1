@@ -10,7 +10,7 @@ namespace HandIn_2_Gr_1.Types
     {
         public string Tconst { get; set; }
 
-        public string? TitleType { get; set; }
+        public string TitleType { get; set; }
 
         public string? PrimaryTitle { get; set; }
 

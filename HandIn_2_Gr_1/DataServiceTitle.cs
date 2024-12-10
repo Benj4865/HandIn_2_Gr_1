@@ -22,7 +22,7 @@ namespace HandIn_2_Gr_1
 
 
         // Currently only supports 1 genre, and a new function is needed to  insert into title_genre
-        public Title CreateTitle(string tconst, string titletype, string primaryTitle, string originalTitle,string isAdult, string startyear, string endyear, int runtimeMinutes, string genres, string posterlink, string plot)
+        public Title CreateTitle(string tconst, string titletype, string primaryTitle, string originalTitle, string isAdult, string startyear, string endyear, int runtimeMinutes, string genres, string posterlink, string plot)
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
             using var connection = new NpgsqlConnection(connectionString);
@@ -50,7 +50,7 @@ namespace HandIn_2_Gr_1
                 }
                 else
                 {
-                    isAdultSQL = false;                
+                    isAdultSQL = false;
                 }
 
                 cmd.Parameters.AddWithValue("tconst", tconst);
@@ -116,6 +116,189 @@ namespace HandIn_2_Gr_1
             { }
 
             return null;
+        }
+
+        // The folowing statement could not easily be scaled, this was faster to do at the time, but had more time been given, it could have been buildt a 
+        //Dynamic query that only consisted of the values that needed to be updated
+        public Title updateTitle(string tconst, string titletype, string primaryTitle, string originalTitle, string isAdult, string startyear, string endyear, int runtimeMinutes, string genres, string posterlink, string plot)
+        {
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+
+            using var connection = new NpgsqlConnection(connectionString);
+            if (doesTconstExist(tconst))
+            {
+                try
+                {
+                    connection.Open();
+
+                    if (titletype.Length >= 1)
+                    {
+                        string query = "UPDATE title_basics SET titletype = @titletype WHERE tconst = @tconst;";
+                        using var cmd = new NpgsqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("tconst", tconst);
+                        cmd.Parameters.AddWithValue("titletype", titletype);
+                        cmd.ExecuteNonQuery();
+                    }
+
+
+                    if (primaryTitle.Length >= 1)
+                    {
+                        string query = "UPDATE title_basics SET primaryTitle = @primaryTitle WHERE tconst = @tconst;";
+                        using var cmd = new NpgsqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("tconst", tconst);
+                        cmd.Parameters.AddWithValue("primaryTitle", primaryTitle);
+                        cmd.ExecuteNonQuery();
+                    }
+
+
+                    if (originalTitle.Length >= 1)
+                    {
+                        string query = "UPDATE title_basics SET originalTitle = @originalTitle WHERE tconst = @tconst;";
+                        using var cmd = new NpgsqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("tconst", tconst);
+                        cmd.Parameters.AddWithValue("originalTitle", originalTitle);
+                        cmd.ExecuteNonQuery();
+                    }
+
+
+                    if (!string.IsNullOrEmpty(isAdult))
+                    {
+                        bool isAdultValue = isAdult.ToLower() switch
+                        {
+                            "t" => true,
+                            "f" => false,
+                            _ => false
+                        };
+
+                        string query = "UPDATE title_basics SET isAdult = @isAdult WHERE tconst = @tconst;";
+                        using var cmd = new NpgsqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("tconst", tconst);
+                        cmd.Parameters.AddWithValue("isAdult", isAdultValue);
+                        cmd.ExecuteNonQuery();
+                    }
+
+
+                    if (startyear.Length == 4)
+                    {
+                        string query = "UPDATE title_basics SET startyear = @startyear WHERE tconst = @tconst;";
+                        using var cmd = new NpgsqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("tconst", tconst);
+                        cmd.Parameters.AddWithValue("startyear", startyear);
+                        cmd.ExecuteNonQuery();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid Startyear");
+                    }
+
+
+                    if (endyear.Length == 4)
+                    {
+                        string query = "UPDATE title_basics SET endyear = @endyear WHERE tconst = @tconst;";
+                        using var cmd = new NpgsqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("tconst", tconst);
+                        cmd.Parameters.AddWithValue("endyear", endyear);
+                        cmd.ExecuteNonQuery();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid Endyear");
+                    }
+
+                    //A limitation of this way, is that titles less that 1 minute will be need to have the value 1 minute
+                    if (runtimeMinutes > 0)
+                    {
+                        string query = "UPDATE title_basics SET runtimeMinutes = @runtimeMinutes WHERE tconst = @tconst;";
+                        using var cmd = new NpgsqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("tconst", tconst);
+                        cmd.Parameters.AddWithValue("runtimeMinutes", runtimeMinutes);
+                        cmd.ExecuteNonQuery();
+                    }
+
+
+                    if (genres.Length >= 1)
+                    {
+                        string query = "UPDATE title_basics SET genres = @genres WHERE tconst = @tconst;";
+                        using var cmd = new NpgsqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("tconst", tconst);
+                        cmd.Parameters.AddWithValue("genres", genres);
+                        cmd.ExecuteNonQuery();
+                    }
+
+
+                    if (posterlink.Length >= 1)
+                    {
+                        string query = "UPDATE title_basics SET poster = @poster WHERE tconst = @tconst;";
+                        using var cmd = new NpgsqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("tconst", tconst);
+                        cmd.Parameters.AddWithValue("poster", posterlink);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    if (plot.Length >= 1)
+                    {
+                        string query = "UPDATE title_basics SET plot = @plot WHERE tconst = @tconst;";
+                        using var cmd = new NpgsqlCommand(query, connection);
+                        cmd.Parameters.AddWithValue("tconst", tconst);
+                        cmd.Parameters.AddWithValue("plot", plot);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    return new Title
+                    {
+                        Tconst = tconst,
+                        TitleType = titletype,
+                        PrimaryTitle = primaryTitle,
+                        OriginalTitle = originalTitle,
+                        IsAdult = isAdult,
+                        StartYear = startyear,
+                        EndYear = endyear,
+                        RuntimeMinutes = runtimeMinutes,
+                        //Genre = genres,
+                        PosterLink = posterlink,
+                        plot = plot
+                    };
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        public bool doesTconstExist(string tconst)
+        {
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+            using var connection = new NpgsqlConnection(connectionString);
+
+            try
+            {
+                connection.Open();
+
+                string query = "SELECT tconst FROM title_basics WHERE tconst = @tconst;";
+                using var cmd = new NpgsqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("tconst", tconst);
+                
+                using var reader = cmd.ExecuteReader();
+
+                reader.Read();
+                var title = reader.GetString(0);
+
+                if (title.Length >= 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public static IList<Title> FindEpisodesFromSeriesTconst(string ParentTconst)
