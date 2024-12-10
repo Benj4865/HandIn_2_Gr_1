@@ -21,7 +21,7 @@ namespace HandIn_2_Gr_1
         public static IList<Title>? titleList = new List<Title>();
 
 
-        // Currently only supports 1 genre, and a new function is needed to  insert into title_genre
+        // Currently only supports 1 genre, and a new function is needed to insert into title_genre
         public Title CreateTitle(string tconst, string titletype, string primaryTitle, string originalTitle, string isAdult, string startyear, string endyear, int runtimeMinutes, string genres, string posterlink, string plot)
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -88,8 +88,21 @@ namespace HandIn_2_Gr_1
             }
         }
         // A list of titles need to be added, so that more that one searchresult can be returned
-        public Title SearchTitleByName(string name)
+        // If a value for pagesize is passed wth the function, it will be used. Otherwies it will be 50
+        public IList<Title> SearchTitleByName(string name, int pageSize = 50, int page = 1)
         {
+            // If people use too big or small a pagesize, we will revert it to 50
+            if (pageSize > 50 || pageSize <= 0)
+            {
+                pageSize = 50;
+            }
+
+            // To make sure no-one is searching for page -1
+            if (page <= 0)
+            {
+                page = 1;
+            }
+
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
             using var connection = new NpgsqlConnection(connectionString);
 
@@ -97,20 +110,29 @@ namespace HandIn_2_Gr_1
             {
                 connection.Open();
 
-                string query = "SELECT primarytitle FROM title_basics WHERE primarytitle ILIKE @searchString;";
+                var calculatedOffSet = (page - 1) * pageSize;
+
+                string query = "SELECT primarytitle FROM title_basics WHERE primarytitle ILIKE @searchString LIMIT @pagesize OFFSET @offset ;";
                 using var cmd = new NpgsqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("searchString", "%" + name + "%");
+                cmd.Parameters.AddWithValue("pagesize",pageSize);
+                cmd.Parameters.AddWithValue("offset", calculatedOffSet);
 
                 using var reader = cmd.ExecuteReader();
 
-                Title title = new Title { };
+                
 
                 while (reader.Read())
                 {
-                    title.PrimaryTitle = reader.GetString(0);
 
+                    Title title = new Title
+                    {
+                        PrimaryTitle = reader.GetString(0)
+                    };
+                    
+                    titleList.Add(title);
                 }
-                return title;
+                return titleList;
             }
             catch
             { }

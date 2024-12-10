@@ -10,7 +10,7 @@ namespace HandIn_2_Gr_1
     public interface IDataServiceTitle
     {
 
-        public Title SearchTitleByName(string name);
+        public IList<Title> SearchTitleByName(string name, int pagesize, int page);
 
         public Title SearchTitleByTConst(string tconst);
 

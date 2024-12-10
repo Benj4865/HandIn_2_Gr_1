@@ -30,10 +30,10 @@ namespace WebAPI.Controllers
 
         //Read by name
         [HttpGet("searchtitlebyname/")]
-        public IActionResult SearchTitleByName(string name)
+        public IActionResult SearchTitleByName(string name, int pagesize, int page)
         {
-            var title = DataService.SearchTitleByName(name);
-            return Ok(title);
+            var titleList = DataService.SearchTitleByName(name, pagesize, page);
+            return Ok(titleList);
         }
 
         //Read by tconst
