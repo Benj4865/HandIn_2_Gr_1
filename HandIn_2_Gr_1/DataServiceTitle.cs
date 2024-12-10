@@ -268,6 +268,28 @@ namespace HandIn_2_Gr_1
             return null;
         }
 
+        public void DeleteTitle(string tconst)
+        {
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+
+            using var connection = new NpgsqlConnection(connectionString);
+            try
+            {
+                connection.Open();
+
+                
+                string query = "DELETE FROM title_basics WHERE tconst = @tconst;";
+
+                using var cmd = new NpgsqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("tconst", tconst);
+                
+                int rowsAffected = cmd.ExecuteNonQuery();
+
+            }
+            catch
+            {
+            }
+        }
         public bool doesTconstExist(string tconst)
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";

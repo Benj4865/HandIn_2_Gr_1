@@ -43,11 +43,14 @@ namespace WebAPI.Controllers
             var title = DataService.updateTitle(data.Tconst, data.TitleType, data.PrimaryTitle, data.OriginalTitle, data.IsAdult, data.StartYear, data.EndYear, data.RuntimeMinutes, data.GenreList, data.PosterLink, data.plot);
             return Ok(title);
         }
-        
+
         //Delete
-
-
-
+        [HttpPost("deletetitle/")]
+        public IActionResult deleteTitle(TitleBody data)
+        {
+            DataService.DeleteTitle(data.Tconst);
+            return Ok();
+        }
     }
 }
 
