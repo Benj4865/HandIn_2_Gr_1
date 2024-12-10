@@ -33,7 +33,8 @@ namespace WebAPI.Controllers
         public IActionResult SearchTitleByName(string name, int pagesize, int page)
         {
             var titleList = DataService.SearchTitleByName(name, pagesize, page);
-            return Ok(titleList);
+            var pageObject = new Paging { titles = titleList, nextpage = "aijsdoisajd" };
+            return Ok(pageObject);
         }
 
         //Read by tconst
