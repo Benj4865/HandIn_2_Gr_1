@@ -22,33 +22,49 @@ namespace HandIn_2_Gr_1
 
 
         // Currently only supports 1 genre, and a new function is needed to  insert into title_genre
-        public Title CreateTitle(string tconst, string titletype, string primaryTitle, string originalTitle, string isAdult, string startyear, string endyear, int runtimeMinutes, string genres, string posterlink, string plot)
+        public Title CreateTitle(string tconst, string titletype, string primaryTitle, string originalTitle,string isAdult, string startyear, string endyear, int runtimeMinutes, string genres, string posterlink, string plot)
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
             using var connection = new NpgsqlConnection(connectionString);
 
             try
             {
-                if (tconst.Length < 9 || primaryTitle.Length < 1 || titletype.Length < 1)
+                if (tconst.Length < 9 || tconst.Length > 10 || primaryTitle.Length < 1 || titletype.Length < 1)
                 {
                     return null;
                 }
                 connection.Open();
 
-                string query = "INSERT INTO title_basics (tconst, titletype, primaryTitle, originalTitle, isAdult, startyear, endyear, runtimeMinutes, genres, posterlink, plot) VALUES (@tconst, @titletype, @primaryTitle, @originalTitle, @isAdult, @startyear, @endyear, @runtimeMinutes, @genres, @posterlink, @plot);";
+                string query = "INSERT INTO title_basics (tconst, titletype, primaryTitle, originalTitle, isAdult, startyear, endyear, runtimeMinutes, genres, poster, plot) VALUES (@tconst, @titletype, @primaryTitle, @originalTitle, @isAdult, @startyear, @endyear, @runtimeMinutes, @genres, @posterlink, @plot);";
                 using var cmd = new NpgsqlCommand(query, connection);
+
+                bool isAdultSQL;
+
+                if (isAdult.ToLower() == "t")
+                {
+                    isAdultSQL = true;
+                }
+                else if (isAdult.ToLower() == "f")
+                {
+                    isAdultSQL = false;
+                }
+                else
+                {
+                    isAdultSQL = false;                
+                }
 
                 cmd.Parameters.AddWithValue("tconst", tconst);
                 cmd.Parameters.AddWithValue("titletype", titletype);
                 cmd.Parameters.AddWithValue("primaryTitle", primaryTitle);
                 cmd.Parameters.AddWithValue("originalTitle", originalTitle);
-                cmd.Parameters.AddWithValue("isAdult", isAdult);
+                cmd.Parameters.AddWithValue("isAdult", isAdultSQL);
                 cmd.Parameters.AddWithValue("startyear", startyear);
                 cmd.Parameters.AddWithValue("endyear", endyear);
                 cmd.Parameters.AddWithValue("runtimeMinutes", runtimeMinutes);
                 cmd.Parameters.AddWithValue("genres", genres);
                 cmd.Parameters.AddWithValue("posterlink", posterlink);
                 cmd.Parameters.AddWithValue("plot", plot);
+                cmd.ExecuteNonQuery();
 
                 Title title = new Title
                 {

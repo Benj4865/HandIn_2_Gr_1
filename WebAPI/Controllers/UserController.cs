@@ -2,7 +2,6 @@ using HandIn_2_Gr_1;
 using HandIn_2_Gr_1.Types;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.PostModels;
-//using WebAPI.Models;
 
 namespace WebAPI.Controllers
 {

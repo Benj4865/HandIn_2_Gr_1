@@ -1,0 +1,40 @@
+﻿using HandIn_2_Gr_1.Types;
+
+namespace WebAPI.PostModels
+{
+    public class TitleBody
+    {
+
+        public string Tconst { get; set; }
+
+        public string? TitleType { get; set; }
+
+        public string? PrimaryTitle { get; set; }
+
+        public string? OriginalTitle { get; set; }
+
+        public string IsAdult { get; set; }
+
+        public string? StartYear { get; set; }
+
+        public string? EndYear { get; set; }
+
+        public int RuntimeMinutes { get; set; }
+
+        //public IList<Genre>? Genre { get; set; }
+        public string GenreList { get; set; }
+
+        public string PosterLink { get; set; }
+
+        public string plot { get; set; }
+
+        //public double Averagerating { get; set; }
+
+        //public int NumberOfVotes { get; set; }
+
+        //Below is a custom attribute, indicating wether or not the title is a in a series or is a standalone movie
+        //public bool IsEpisode { get; set; } = false;
+
+
+    }
+}
