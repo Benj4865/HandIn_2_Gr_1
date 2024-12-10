@@ -10,6 +10,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Diagnostics.Metrics;
 
 
+
 namespace HandIn_2_Gr_1;
 
 
@@ -38,29 +39,40 @@ public class DataServicePerson : IDataServicePerson
             connection.Open();
             Console.WriteLine("Sucess\n");
 
-            using var cmd = new NpgsqlCommand("SELECT nconst, primaryname, birthyear FROM name_basics WHERE nconst = '" + nconst + "' ", connection);
+            using var cmd = new NpgsqlCommand(
+                @"SELECT nconst, primaryname, birthyear, deathyear, primaryprofession
+                    FROM name_basics 
+                    WHERE nconst = @nconst", 
+                connection);
+
+            cmd.Parameters.AddWithValue("@nconst", nconst);
 
             using var reader = cmd.ExecuteReader();
 
-
-            while (reader.Read())
+            if (reader.Read())
             {
-                Person person = new Person()
+                var person = new Person
                 {
                     Nconst = reader.GetString(0),
-                    Primaryname = reader.GetString(1),
-                    Birthyear = reader.GetString(2)
+                    Primaryname = reader.IsDBNull(1) ? null : reader.GetString(1),
+                    Birthyear = reader.IsDBNull(2) ? null : reader.GetString(2),
+                    Deathyear = reader.IsDBNull(3) ? null : reader.GetString(3),
+                    Primaryprofessions = reader.IsDBNull(4)
+                        ? null
+                        : reader.GetString(4).Split(',').Select(p => new Professions { professionName = p }).ToList()
                 };
 
-                Console.WriteLine(person.Birthyear + ", " + person.Nconst + ", " + person.Primaryname);
-                Console.Write("Data Found");
-
+                Console.WriteLine($"Data Found: {person.Nconst}, {person.Primaryname}, {person.Birthyear}, {person.Deathyear}");
                 return person;
             }
-
+            else
+            {
+                Console.WriteLine("No person found with the given nconst.");
+            }
         }
         catch (Exception ex)
         {
+            Console.WriteLine($"Error: {ex.Message}\nStackTrace: {ex.StackTrace}");
         }
 
         return null;
@@ -135,9 +147,6 @@ public class DataServicePerson : IDataServicePerson
 
         return "nm" + numerticPart.ToString("D7");
     }
-
-
-
 
 
     public IList<Person> SearchByProfession(string professionname)

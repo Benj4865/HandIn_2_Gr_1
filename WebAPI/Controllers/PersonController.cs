@@ -69,12 +69,12 @@ namespace WebAPI.Controllers
                 });
             }
         }
+        // HTTP Update functions
 
-        // HTTP Update funtions
 
 
         // HTTP Delete functions
-        
+
 
         [HttpGet("profession/{profession}")]
         public IActionResult SearchByProfession(string profession)
