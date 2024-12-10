@@ -28,11 +28,21 @@ namespace WebAPI.Controllers
             return Ok(title);
         }
 
-        //Read
-        [HttpGet("searchtitle/")]
+        //Read by name
+        [HttpGet("searchtitlebyname/")]
         public IActionResult SearchTitleByName(string name)
         {
             var title = DataService.SearchTitleByName(name);
+            return Ok(title);
+        }
+
+        //Read by tconst
+
+        // api/title/{tconst}
+        [HttpGet("{tconst}")]
+        public IActionResult SearchTitleByTConst(string tconst)
+        {
+            var title = DataService.SearchTitleByTConst(tconst);
             return Ok(title);
         }
 

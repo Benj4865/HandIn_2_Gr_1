@@ -146,6 +146,46 @@ namespace HandIn_2_Gr_1
             {
                 return null;
             }
+        }
+
+        public User SearchUID(int userID)
+        {
+
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+
+            using var connection = new NpgsqlConnection(connectionString);
+            try
+            {
+                User user = new User();
+                connection.Open();
+
+                string query = "SELECT username, useremail FROM users WHERE userid = @userID;";
+
+                using var cmd = new NpgsqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("userID", userID);
+
+                using var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    user = new User()
+                    {
+                        UserName = reader.GetString(0),
+                        UserEmail = reader.GetString(1)
+                    };
+                }
+
+                // Can be added again if function input is modified to also include logged in user.
+
+                //var searchvalue = username + " " + useremail + " " + userID;
+                //LogSearchHistory(userID, searchvalue);
+
+                return user;
+            }
+            catch
+            {
+                return null;
+            }
 
         }
 

@@ -118,6 +118,37 @@ namespace HandIn_2_Gr_1
             return null;
         }
 
+        public Title SearchTitleByTConst(string tconst)
+        {
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+            using var connection = new NpgsqlConnection(connectionString);
+
+            try
+            {
+                connection.Open();
+
+                string query = "SELECT primarytitle FROM title_basics WHERE tconst = @tconst;";
+                using var cmd = new NpgsqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("tconst",tconst);
+
+                using var reader = cmd.ExecuteReader();
+
+                Title title = new Title { };
+
+                while (reader.Read())
+                {
+                    title.Tconst = "/api/title/" + tconst;
+                    title.PrimaryTitle = reader.GetString(0);
+
+                }
+                return title;
+            }
+            catch
+            { }
+
+            return null;
+        }
+
         // The folowing statement could not easily be scaled, this was faster to do at the time, but had more time been given, it could have been buildt a 
         //Dynamic query that only consisted of the values that needed to be updated
         public Title updateTitle(string tconst, string titletype, string primaryTitle, string originalTitle, string isAdult, string startyear, string endyear, int runtimeMinutes, string genres, string posterlink, string plot)

@@ -20,7 +20,7 @@ namespace WebAPI.Controllers
             _linkGenerator = linkGenerator;
         }
 
-        [HttpGet("getuser/")]
+        [HttpGet("getusers/")]
         public IActionResult GetUsers()
         {
             var users = DataService.GetUsers();
@@ -33,6 +33,7 @@ namespace WebAPI.Controllers
             DataService.CreateUser(data.UserName, data.UserPassword, data.UserEmail);
             return Ok();
         }
+
         //Read
         [HttpGet("searchuser/")]
         public IActionResult SearchUser(string username="", string useremail ="", int userid=0)
@@ -41,6 +42,16 @@ namespace WebAPI.Controllers
 
             return Ok(user);
         }
+
+        //Read on UID
+        [HttpGet("{userID}")]
+        public IActionResult SearchUID(int userID)
+        {
+            var user = DataService.SearchUID(userID);
+
+            return Ok(user);
+        }
+        
         //Update
         [HttpPost("updateuser/")]
         public IActionResult UpdateUser(UserBody data)
