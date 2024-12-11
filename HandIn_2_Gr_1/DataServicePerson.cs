@@ -89,7 +89,6 @@ public class DataServicePerson : IDataServicePerson
         try
         {
             connection.Open();
-            Console.WriteLine("Sucess\n");
 
             string maxNconst = GetMaxNconst(connection);
             Console.WriteLine($"MaxNconst from DB: {maxNconst}");
@@ -101,7 +100,6 @@ public class DataServicePerson : IDataServicePerson
                 "VALUES (@nconst, @primaryname, @birthyear, @deathyear, @primaryprofession)" +
                 "RETURNING nconst, primaryname, birthyear, deathyear, primaryprofession ;",
                 connection);
-
 
             cmd.Parameters.AddWithValue("@nconst", newNconst);
             cmd.Parameters.AddWithValue("@primaryname", newPerson.Primaryname);

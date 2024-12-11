@@ -21,11 +21,12 @@ namespace WebAPI.Controllers
             _linkGenerator = linkGenerator;
         }
 
+        //ReadAll Users
         [HttpGet("getusers/")]
         public IActionResult GetUsers(int page, int pageSize)
         {
             var userlist = DataService.GetUsers(page, pageSize);
-            var pageObject = new Paging { users = userlist, nextpage = "/api/title/getusers?pagesize=10&page=" + (page + 1).ToString(), previouspage = "/api/title/getuserspagesize=10&page=" + (page - 1).ToString() };
+            var pageObject = new Paging { users = userlist, nextpage = "/api/title/getusers?pagesize=" + pageSize.ToString() + "&page=" + (page + 1).ToString(), previouspage = "/api/title/getuserspagesize=" + pageSize.ToString() + "&page=" + (page - 1).ToString() };
             return Ok(pageObject);
         }
         //Create
