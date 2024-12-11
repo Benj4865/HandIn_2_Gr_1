@@ -15,7 +15,7 @@ namespace HandIn_2_Gr_1
         
         public Person createPerson(Person newPerson);
 
-
+        public Person updatePerson(string nconst, string primaryname, string birthyear, string deathyear, string primaryprofession, string knownForTitles);
         public IList<Person> SearchByProfession(string professionname);
 
         public IList<Title> FindKnownForTitles(string Nconst);

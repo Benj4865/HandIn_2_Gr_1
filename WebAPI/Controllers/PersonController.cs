@@ -1,6 +1,7 @@
 ﻿using HandIn_2_Gr_1;
 using HandIn_2_Gr_1.Types;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.PostModels;
 
 namespace WebAPI.Controllers
 {
@@ -29,7 +30,7 @@ namespace WebAPI.Controllers
             return Ok(person);
         }
 
-        [HttpGet("getpersonname/{name}")]
+        [HttpGet("searchbyname/{name}")]
         public IActionResult SearchByName(string name)
         {
             var person = DataService.SearchByName(name);
@@ -72,8 +73,12 @@ namespace WebAPI.Controllers
         // HTTP Update functions
 
 
-
-        // HTTP Delete functions
+        [HttpPost("updateperson/")]
+        public IActionResult UpdatePerson(PersonBody data)
+        {
+            var person = DataService.updatePerson(data.Nconst, data.Primaryname, data.Birthyear, data.Deathyear, data.Primaryprofessions, data.KnownFor);
+            return Ok(person);
+        }
 
 
         [HttpGet("profession/{profession}")]

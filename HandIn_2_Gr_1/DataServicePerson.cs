@@ -29,7 +29,7 @@ public class DataServicePerson : IDataServicePerson
     }
 
     // In this function we tried using LinQ to set up the query-string. However we decided against doing it for all functions,
-    // Due to it's complexit
+    // Due to it's complexit.
     public Person GetPerson(string nconst)
     {
 
@@ -62,7 +62,7 @@ public class DataServicePerson : IDataServicePerson
                         ? null
                         : reader.GetString(4).Split(',').Select(p => new Professions { professionName = p }).ToList(),
                     KnownFor = FindKnownForTitles(nconst)
-                    
+
                 };
 
                 Console.WriteLine($"Data Found: {person.Nconst}, {person.Primaryname}, {person.Birthyear}, {person.Deathyear}");
@@ -81,6 +81,7 @@ public class DataServicePerson : IDataServicePerson
         return null;
     }
 
+    //Here we experimented with using the Person-class as input to the function, instead of passing seperate parameters
     public Person createPerson(Person newPerson)
     {
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -134,7 +135,84 @@ public class DataServicePerson : IDataServicePerson
         }
         return null;
     }
-    
+
+
+    public Person updatePerson(string nconst, string primaryname, string birthyear, string deathyear, string primaryprofession, string knownForTitles)
+    {
+        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+
+        using var connection = new NpgsqlConnection(connectionString);
+        if (doesNconstExist(nconst))
+        {
+            try
+            {
+                connection.Open();
+
+
+                if (primaryname.Length >= 1)
+                {
+                    string query = "UPDATE name_basics SET primaryname = @primaryname WHERE nconst = @nconst;";
+                    using var cmd = new NpgsqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("nconst", nconst);
+                    cmd.Parameters.AddWithValue("primaryname", primaryname);
+                    cmd.ExecuteNonQuery();
+                }
+
+
+                if (birthyear.Length >= 1)
+                {
+                    string query = "UPDATE name_basics SET birthyear = @birthyear WHERE nconst = @nconst;";
+                    using var cmd = new NpgsqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("nconst", nconst);
+                    cmd.Parameters.AddWithValue("birthyear", birthyear);
+                    cmd.ExecuteNonQuery();
+                }
+
+                if (deathyear.Length >= 1)
+                {
+                    string query = "UPDATE name_basics SET deathyear = @deathyear WHERE nconst = @nconst;";
+                    using var cmd = new NpgsqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("nconst", nconst);
+                    cmd.Parameters.AddWithValue("deathyear", deathyear);
+                    cmd.ExecuteNonQuery();
+                }
+
+                if (primaryprofession.Length >= 1)
+                {
+                    string query = "UPDATE name_basics SET primaryprofession = @primaryprofession WHERE nconst = @nconst;";
+                    using var cmd = new NpgsqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("nconst", nconst);
+                    cmd.Parameters.AddWithValue("primaryprofession", primaryprofession);
+                    cmd.ExecuteNonQuery();
+                }
+
+                if (knownForTitles.Length >= 1)
+                {
+                    string query = "UPDATE name_basics SET knownfortitles = @knownfortitles WHERE nconst = @nconst;";
+                    using var cmd = new NpgsqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("nconst", nconst);
+                    cmd.Parameters.AddWithValue("knownfortitles", knownForTitles);
+                    cmd.ExecuteNonQuery();
+                }
+
+
+                return new Person
+                {
+                    Nconst = nconst,
+                    Primaryname = primaryname,
+                    Birthyear = birthyear,
+                    Deathyear = deathyear
+                };
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        return null;
+    }
+
+
     private string GetMaxNconst(NpgsqlConnection connection)
     {
         using var cmd = new NpgsqlCommand("SELECT MAX(nconst) FROM name_basics", connection);
@@ -151,6 +229,38 @@ public class DataServicePerson : IDataServicePerson
         return "nm" + numerticPart.ToString("D7");
     }
 
+    public bool doesNconstExist(string nconst)
+    {
+        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+        using var connection = new NpgsqlConnection(connectionString);
+
+        try
+        {
+            connection.Open();
+
+            string query = "SELECT nconst FROM name_basics WHERE nconst = @nconst;";
+            using var cmd = new NpgsqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("nconst", nconst);
+
+            using var reader = cmd.ExecuteReader();
+
+            reader.Read();
+            var person = reader.GetString(0);
+
+            if (person.Length >= 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch
+        {
+            return false;
+        }
+    }
     public IList<Person> SearchByProfession(string professionname)
     {
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
