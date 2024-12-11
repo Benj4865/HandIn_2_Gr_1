@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Xml.Linq;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 
 namespace HandIn_2_Gr_1
@@ -15,15 +16,15 @@ namespace HandIn_2_Gr_1
     public class DataServiceUser : IDataServiceUser
     {
 
-        public static string filepath = "C:/Users/NotAtAllPostGresPW.txt";
-        public static string filecontent = File.ReadAllText(filepath);
+        
+        
 
         public static IList<User>? UserList = new List<User>();
 
         // This function return a list of all users in database
         public IList<User> GetUsers(int page, int pageSize)
         {
-            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+            var connectionString = Config.GetConnectionString();
             using var connection = new NpgsqlConnection(connectionString);
 
             try
@@ -71,7 +72,7 @@ namespace HandIn_2_Gr_1
         //Should be implemented later
         public void CreateUser(string userName, string password, string useremail)
         {
-            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+            var connectionString = Config.GetConnectionString();
 
             using var connection = new NpgsqlConnection(connectionString);
             try
@@ -98,7 +99,7 @@ namespace HandIn_2_Gr_1
         // This funciton deletes a user from the input-data
         public void DeleteUser(int userID, string password)
         {
-            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+            var connectionString = Config.GetConnectionString();
 
             using var connection = new NpgsqlConnection(connectionString);
             try
@@ -120,19 +121,19 @@ namespace HandIn_2_Gr_1
         }
 
         // Currently only returns the last userhit from the database
-        public User SearchUser(string username, string useremail, int userID, int pagesize, int page)
+        public IList<User> SearchUser(string username, string useremail, int userID, int pagesize, int page)
         {
 
-            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
-
+            var connectionString = Config.GetConnectionString();
             using var connection = new NpgsqlConnection(connectionString);
+
             try
             {
                 User user = new User();
                 connection.Open();
                 var calculatedOffSet = (page - 1) * pagesize;
 
-                string query = "SELECT username, useremail FROM users WHERE username ILIKE @username OR useremail ILIKE @useremail OR userID = @userID LIMIT @pagesize OFFSET @offset;";
+                string query = "SELECT userid, username, useremail FROM users WHERE username ILIKE @username OR useremail ILIKE @useremail OR userID = @userID LIMIT @pagesize OFFSET @offset;";
 
                 using var cmd = new NpgsqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("username", "%" + username + "%");
@@ -142,16 +143,22 @@ namespace HandIn_2_Gr_1
                 cmd.Parameters.AddWithValue("offset", calculatedOffSet);
                 using var reader = cmd.ExecuteReader();
 
+                var users = new List<User>();
+
                 while (reader.Read())
                 {
                     user = new User()
                     {
-                        UserName = reader.GetString(0),
-                        UserEmail = reader.GetString(1)
+                        UserID = reader.GetInt32(0),
+                        userlink = "/api/users/" + reader.GetInt32(0).ToString(),
+                        UserName = reader.GetString(1),
+                        UserEmail = reader.GetString(2)
                     };
+
+                    users.Add(user);
                 }
 
-                return user;
+                return users;
             }
             catch
             {
@@ -162,7 +169,7 @@ namespace HandIn_2_Gr_1
         public User SearchUID(int userID)
         {
 
-            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+            var connectionString = Config.GetConnectionString();
 
             using var connection = new NpgsqlConnection(connectionString);
             try
@@ -202,7 +209,7 @@ namespace HandIn_2_Gr_1
 
         public void UpdateUser(int userID, string userName, string userPassword, string userEmail)
         {
-            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+            var connectionString = Config.GetConnectionString();
 
             using var connection = new NpgsqlConnection(connectionString);
             try
@@ -246,7 +253,7 @@ namespace HandIn_2_Gr_1
         //Only used internally
         int findNewUserID()
         {
-            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+            var connectionString = Config.GetConnectionString();
 
             using var connection = new NpgsqlConnection(connectionString);
             try
@@ -275,7 +282,7 @@ namespace HandIn_2_Gr_1
 
         public void LogSearchHistory(int userid, string searchvalue)
         {
-            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+            var connectionString = Config.GetConnectionString();
 
             using var connection = new NpgsqlConnection(connectionString);
             try
@@ -295,7 +302,7 @@ namespace HandIn_2_Gr_1
         
         public IList<string> ShowSearchHistory(int userid)
         {
-            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+            var connectionString = Config.GetConnectionString();
             IList<string> searchHistory = new List<string>();
             using var connection = new NpgsqlConnection(connectionString);
             try

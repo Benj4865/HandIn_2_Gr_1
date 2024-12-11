@@ -16,8 +16,8 @@ namespace HandIn_2_Gr_1;
 
 public class DataServicePerson : IDataServicePerson
 {
-    public static string filepath = "C:/Users/NotAtAllPostGresPW.txt";
-    public static string filecontent = File.ReadAllText(filepath);
+    
+    
 
 
     public IList<Person> PersonList = new List<Person>();
@@ -33,7 +33,7 @@ public class DataServicePerson : IDataServicePerson
     public Person GetPerson(string nconst)
     {
 
-        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+        var connectionString = Config.GetConnectionString();
         using var connection = new NpgsqlConnection(connectionString);
 
         try
@@ -84,7 +84,7 @@ public class DataServicePerson : IDataServicePerson
     //Here we experimented with using the Person-class as input to the function, instead of passing seperate parameters
     public Person createPerson(Person newPerson)
     {
-        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+        var connectionString = Config.GetConnectionString();
         using var connection = new NpgsqlConnection(connectionString);
 
         try
@@ -139,7 +139,7 @@ public class DataServicePerson : IDataServicePerson
 
     public Person updatePerson(string nconst, string primaryname, string birthyear, string deathyear, string primaryprofession, string knownForTitles)
     {
-        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+        var connectionString = Config.GetConnectionString();
 
         using var connection = new NpgsqlConnection(connectionString);
         if (doesNconstExist(nconst))
@@ -231,7 +231,7 @@ public class DataServicePerson : IDataServicePerson
 
     public bool doesNconstExist(string nconst)
     {
-        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+        var connectionString = Config.GetConnectionString();
         using var connection = new NpgsqlConnection(connectionString);
 
         try
@@ -265,7 +265,7 @@ public class DataServicePerson : IDataServicePerson
     // Is not yet protected against SQL injection
     public IList<Person> SearchByProfession(string professionname, int pagesize, int page)
     {
-        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+        var connectionString = Config.GetConnectionString();
         using var connection = new NpgsqlConnection(connectionString);
 
         try
@@ -317,7 +317,7 @@ public class DataServicePerson : IDataServicePerson
 
     public IList<Title> FindKnownForTitles(string Nconst)
     {
-        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+        var connectionString = Config.GetConnectionString();
         using var connection = new NpgsqlConnection(connectionString);
 
         try
@@ -380,7 +380,7 @@ public class DataServicePerson : IDataServicePerson
 
     public IList<Person> SearchByName(string name, int pagesize, int page)
     {
-        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
+        var connectionString = Config.GetConnectionString();
         IList<Person> persons = new List<Person>();
 
         using var connection = new NpgsqlConnection(connectionString);

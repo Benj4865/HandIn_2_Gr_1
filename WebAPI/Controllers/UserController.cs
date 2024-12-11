@@ -68,9 +68,9 @@ namespace WebAPI.Controllers
                 page = 1;
             }
 
-            var user = DataService.SearchUser(username, useremail, userid);
-
-            return Ok(user);
+            var userList = DataService.SearchUser(username, useremail, userid, pagesize, page);
+            var pageObject = new Paging { users = userList, nextpage = "/api/title/searchuser?username=" + username + "&useremail=" + useremail + "&userid=" + userid.ToString() + "&pagesize=" + pagesize.ToString() + "&page=" + (page + 1).ToString(), previouspage = "/api/title/searchuser?username=" + username + "&useremail=" + useremail + "&userid=" + userid.ToString() + "&pagesize=" + pagesize.ToString() + "&page=" + (page - 1).ToString() };
+            return Ok(pageObject);
         }
 
         //Read on UID

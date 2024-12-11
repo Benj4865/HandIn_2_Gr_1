@@ -14,10 +14,11 @@ namespace HandIn_2_Gr_1
 
         public void CreateUser(string userName, string password, string useremail);
 
-        public User SearchUser(string username, string useremail, int userID);
+        public IList<User> SearchUser(string username, string useremail, int userID, int pagesize, int page);
         public User SearchUID(int userID);
 
         public void UpdateUser(int userID, string userName, string userPassword, string userEmail);
+
         void DeleteUser(int userID, string password);
 
     }
