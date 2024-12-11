@@ -29,15 +29,27 @@ namespace WebAPI.Controllers
         }
 
         //Read by name
+        // If a value for pagesize is passed wth the function, it will be used. Otherwies it will be 50
         [HttpGet("searchtitlebyname/")]
-        public IActionResult SearchTitleByName(string name, int pagesize, int page)
+        public IActionResult SearchTitleByName(string name, int pagesize= 50, int page= 1)
         {
+            // If people use too big or small a pagesize, we will revert it to 50
+            if (pagesize > 50 || pagesize <= 0)
+            {
+                pagesize = 50;
+            }
+
+            // To make sure no-one is searching for page -1
+            if (page <= 0)
+            {
+                page = 1;
+            }
+
             var titleList = DataService.SearchTitleByName(name, pagesize, page);
             var pageObject = new Paging{ titles = titleList, nextpage = "/api/title/searchtitlebyname?name=e&pagesize=10&page=" + (page + 1).ToString(), previouspage = "/api/title/searchtitlebyname?name=e&pagesize=10&page=" + (page - 1).ToString()};
             return Ok(pageObject);
         }
 
-        //Read by tconst
 
         // api/title/{tconst}
         [HttpGet("{tconst}")]

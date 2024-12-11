@@ -12,6 +12,8 @@ namespace HandIn_2_Gr_1.Types
 
         public IList<User> users { get; set; }
 
+        public IList<Person> people {  get; set; }        
+
         public string nextpage { get; set; }
 
         public string previouspage { get; set; }

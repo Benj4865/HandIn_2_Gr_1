@@ -88,21 +88,9 @@ namespace HandIn_2_Gr_1
             }
         }
         // A list of titles need to be added, so that more that one searchresult can be returned
-        // If a value for pagesize is passed wth the function, it will be used. Otherwies it will be 50
-        public IList<Title> SearchTitleByName(string name, int pageSize = 50, int page = 1)
+        
+        public IList<Title> SearchTitleByName(string name, int pageSize, int page)
         {
-            // If people use too big or small a pagesize, we will revert it to 50
-            if (pageSize > 50 || pageSize <= 0)
-            {
-                pageSize = 50;
-            }
-
-            // To make sure no-one is searching for page -1
-            if (page <= 0)
-            {
-                page = 1;
-            }
-
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
             using var connection = new NpgsqlConnection(connectionString);
 

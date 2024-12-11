@@ -261,7 +261,9 @@ public class DataServicePerson : IDataServicePerson
             return false;
         }
     }
-    public IList<Person> SearchByProfession(string professionname)
+
+    // Is not yet protected against SQL injection
+    public IList<Person> SearchByProfession(string professionname, int pagesize, int page)
     {
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
         using var connection = new NpgsqlConnection(connectionString);
@@ -269,10 +271,13 @@ public class DataServicePerson : IDataServicePerson
         try
         {
             connection.Open();
-            Console.WriteLine("Sucess\n");
 
-            using var cmd = new NpgsqlCommand("SELECT name_basics.primaryname, name_basics.nconst, nm_professions.profession FROM name_basics INNER JOIN nm_professions ON name_basics.nconst = nm_professions.nconst WHERE nm_professions.profession = '" + professionname + "' Limit 10;", connection);
+            var calculatedOffSet = (page - 1) * pagesize;
 
+            using var cmd = new NpgsqlCommand("SELECT name_basics.primaryname, name_basics.nconst, nm_professions.profession FROM name_basics INNER JOIN nm_professions ON name_basics.nconst = nm_professions.nconst WHERE nm_professions.profession = @professionname Limit @pagesize OFFSET @offset;", connection);
+            cmd.Parameters.AddWithValue("professionname", professionname);
+            cmd.Parameters.AddWithValue("offset", calculatedOffSet);
+            cmd.Parameters.AddWithValue("pagesize", pagesize);
             using var reader = cmd.ExecuteReader();
 
 
@@ -301,8 +306,9 @@ public class DataServicePerson : IDataServicePerson
 
             }
         }
-        catch (Exception ex)
+        catch
         {
+            return null;
         }
 
         return PersonList;
@@ -331,7 +337,7 @@ public class DataServicePerson : IDataServicePerson
                 {
                     Title title = new Title
                     {
-                        Tconst = reader.GetString(0),
+                        Tconst = "/api/title/" + reader.GetString(0),
                         PrimaryTitle = reader.GetString(1)
                     };
                     titles.Add(title);
@@ -372,7 +378,7 @@ public class DataServicePerson : IDataServicePerson
 
     }
 
-    public IList<Person> SearchByName(string name)
+    public IList<Person> SearchByName(string name, int pagesize, int page)
     {
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
         IList<Person> persons = new List<Person>();
@@ -382,10 +388,13 @@ public class DataServicePerson : IDataServicePerson
         try
         {
             connection.Open();
-            Console.WriteLine("Connection successful. ");
 
-            using var cmd = new NpgsqlCommand("SELECT name_basics.nconst, name_basics.primaryname, name_basics.birthyear, name_basics.deathyear, nm_professions.profession FROM name_basics INNER JOIN nm_professions ON name_basics.nconst = nm_professions.nconst WHERE primaryname ILIKE @name", connection); // insert, primary professions and knownFor
-            cmd.Parameters.AddWithValue("@name", $"%{name}%");
+            var calculatedOffSet = (page - 1) * pagesize;
+
+            using var cmd = new NpgsqlCommand("SELECT name_basics.nconst, name_basics.primaryname, name_basics.birthyear, name_basics.deathyear, nm_professions.profession FROM name_basics INNER JOIN nm_professions ON name_basics.nconst = nm_professions.nconst WHERE primaryname ILIKE @name LIMIT @pagesize OFFSET @offset", connection); // insert, primary professions and knownFor
+            cmd.Parameters.AddWithValue("name", $"%{name}%");
+            cmd.Parameters.AddWithValue("offset", calculatedOffSet);
+            cmd.Parameters.AddWithValue("pagesize", pagesize);
 
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
@@ -405,7 +414,7 @@ public class DataServicePerson : IDataServicePerson
 
                 Person person = new Person()
                 {
-                    Nconst = reader.GetString(0),
+                    Nconst = "/api/person/" + reader.GetString(0),
                     Primaryname = reader.GetString(1),
                     Birthyear = reader.GetString(2),
                     Deathyear = reader.GetString(3),

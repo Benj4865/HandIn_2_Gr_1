@@ -31,10 +31,23 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("searchbyname/{name}")]
-        public IActionResult SearchByName(string name)
+        public IActionResult SearchByName(string name, int pagesize, int page)
         {
-            var person = DataService.SearchByName(name);
-            return Ok(person);
+            // If people use too big or small a pagesize, we will revert it to 50
+            if (pagesize > 50 || pagesize <= 0)
+            {
+                pagesize = 50;
+            }
+
+            // To make sure no-one is searching for page -1
+            if (page <= 0)
+            {
+                page = 1;
+            }
+
+            var personList = DataService.SearchByName(name, pagesize, page);
+            var pageObejct = new Paging { people = personList, nextpage = "/api/person/searchbyname/" + name + "?pagesize=" + pagesize.ToString() + "&page=" + (page + 1).ToString(), previouspage = "/api/person/searchbyname/" + name + "?pagesize=" + pagesize.ToString() + "&page=" + (page - 1).ToString() };
+            return Ok(pageObejct);
         }
 
 
@@ -82,18 +95,33 @@ namespace WebAPI.Controllers
 
 
         [HttpGet("profession/{profession}")]
-        public IActionResult SearchByProfession(string profession)
+        public IActionResult SearchByProfession(string profession, int pagesize=50, int page= 1)
         {
-            var persons = DataService.SearchByProfession(profession);
-            return Ok(persons);
+            // If people use too big or small a pagesize, we will revert it to 50
+            if (pagesize > 50 || pagesize <= 0)
+            {
+                pagesize = 50;
+            }
+
+            // To make sure no-one is searching for page -1
+            if (page <= 0)
+            {
+                page = 1;
+            }
+
+            var professionList = DataService.SearchByProfession(profession, pagesize, page);
+            var pageObject = new Paging { people = professionList,  nextpage = "/api/person/profession/" + profession + "?pagesize=" + pagesize.ToString() + "&page=" + (page + 1).ToString(), previouspage = "/api/person/profession/" + profession + "?pagesize=" + pagesize.ToString() + "&page=" + (page - 1).ToString() };
+            return Ok(pageObject);
         }
 
+        /*
         [HttpGet("knownfor/{NConst}")]
         public IActionResult FindKnownForTitles(string NConst)
         {
             var persons = DataService.FindKnownForTitles(NConst);
             return Ok(persons);
         }
+        */
 
     }
 

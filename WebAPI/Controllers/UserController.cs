@@ -23,12 +23,25 @@ namespace WebAPI.Controllers
 
         //ReadAll Users
         [HttpGet("getusers/")]
-        public IActionResult GetUsers(int page, int pageSize)
+        public IActionResult GetUsers(int pagesize = 50, int page = 1)
         {
-            var userlist = DataService.GetUsers(page, pageSize);
-            var pageObject = new Paging { users = userlist, nextpage = "/api/title/getusers?pagesize=" + pageSize.ToString() + "&page=" + (page + 1).ToString(), previouspage = "/api/title/getuserspagesize=" + pageSize.ToString() + "&page=" + (page - 1).ToString() };
+            // If people use too big or small a pagesize, we will revert it to 50
+            if (pagesize > 50 || pagesize <= 0)
+            {
+                pagesize = 50;
+            }
+
+            // To make sure no-one is searching for page -1
+            if (page <= 0)
+            {
+                page = 1;
+            }
+
+            var userlist = DataService.GetUsers(page, pagesize);
+            var pageObject = new Paging { users = userlist, nextpage = "/api/title/getusers?pagesize=" + pagesize.ToString() + "&page=" + (page + 1).ToString(), previouspage = "/api/title/getusers?pagesize=" + pagesize.ToString() + "&page=" + (page - 1).ToString() };
             return Ok(pageObject);
         }
+
         //Create
         [HttpPost("createuser/")]
         public IActionResult CreateUser(UserBody data)
@@ -39,9 +52,23 @@ namespace WebAPI.Controllers
 
         //Read
         [HttpGet("searchuser/")]
-        public IActionResult SearchUser(string username="", string useremail ="", int userid=0)
+        public IActionResult SearchUser(string username="", string useremail ="", int userid=0, int pagesize= 50, int page= 1)
         {
-           var user = DataService.SearchUser(username, useremail, userid);
+
+
+            // If people use too big or small a pagesize, we will revert it to 50
+            if (pagesize > 50 || pagesize <= 0)
+            {
+                pagesize = 50;
+            }
+
+            // To make sure no-one is searching for page -1
+            if (page <= 0)
+            {
+                page = 1;
+            }
+
+            var user = DataService.SearchUser(username, useremail, userid);
 
             return Ok(user);
         }

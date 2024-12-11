@@ -23,18 +23,6 @@ namespace HandIn_2_Gr_1
         // This function return a list of all users in database
         public IList<User> GetUsers(int page, int pageSize)
         {
-            // If people use too big or small a pagesize, we will revert it to 50
-            if (pageSize > 50 || pageSize <= 0)
-            {
-                pageSize = 50;
-            }
-
-            // To make sure no-one is searching for page -1
-            if (page <= 0)
-            {
-                page = 1;
-            }
-
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
             using var connection = new NpgsqlConnection(connectionString);
 
@@ -132,7 +120,7 @@ namespace HandIn_2_Gr_1
         }
 
         // Currently only returns the last userhit from the database
-        public User SearchUser(string username, string useremail, int userID)
+        public User SearchUser(string username, string useremail, int userID, int pagesize, int page)
         {
 
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -142,13 +130,16 @@ namespace HandIn_2_Gr_1
             {
                 User user = new User();
                 connection.Open();
+                var calculatedOffSet = (page - 1) * pagesize;
 
-                string query = "SELECT username, useremail FROM users WHERE username ILIKE @username OR useremail ILIKE @useremail OR userID = @userID LIMIT 1;";
+                string query = "SELECT username, useremail FROM users WHERE username ILIKE @username OR useremail ILIKE @useremail OR userID = @userID LIMIT @pagesize OFFSET @offset;";
 
                 using var cmd = new NpgsqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("username", "%" + username + "%");
                 cmd.Parameters.AddWithValue("useremail", "%" + useremail + "%");
                 cmd.Parameters.AddWithValue("userID", userID);
+                cmd.Parameters.AddWithValue("pagesize", pagesize);
+                cmd.Parameters.AddWithValue("offset", calculatedOffSet);
                 using var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
@@ -159,11 +150,6 @@ namespace HandIn_2_Gr_1
                         UserEmail = reader.GetString(1)
                     };
                 }
-
-                // Can be added again if function input is modified to also include logged in user.
-
-                //var searchvalue = username + " " + useremail + " " + userID;
-                //LogSearchHistory(userID, searchvalue);
 
                 return user;
             }
