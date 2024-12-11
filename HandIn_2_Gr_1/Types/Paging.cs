@@ -10,7 +10,11 @@ namespace HandIn_2_Gr_1.Types
     {
         public IList<Title> titles { get; set; }
 
+        public IList<User> users { get; set; }
+
         public string nextpage { get; set; }
-        
+
+        public string previouspage { get; set; }
+
     }
 }

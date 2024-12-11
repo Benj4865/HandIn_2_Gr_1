@@ -1,6 +1,7 @@
 using HandIn_2_Gr_1;
 using HandIn_2_Gr_1.Types;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebAPI.PostModels;
 
 namespace WebAPI.Controllers
@@ -21,10 +22,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getusers/")]
-        public IActionResult GetUsers()
+        public IActionResult GetUsers(int page, int pageSize)
         {
-            var users = DataService.GetUsers();
-            return Ok(users);
+            var userlist = DataService.GetUsers(page, pageSize);
+            var pageObject = new Paging { users = userlist, nextpage = "/api/title/getusers?pagesize=10&page=" + (page + 1).ToString(), previouspage = "/api/title/getuserspagesize=10&page=" + (page - 1).ToString() };
+            return Ok(pageObject);
         }
         //Create
         [HttpPost("createuser/")]

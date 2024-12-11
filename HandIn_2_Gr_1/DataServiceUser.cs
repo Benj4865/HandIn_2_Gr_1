@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Xml.Linq;
 
 
 namespace HandIn_2_Gr_1
@@ -19,26 +21,47 @@ namespace HandIn_2_Gr_1
         public static IList<User>? UserList = new List<User>();
 
         // This function return a list of all users in database
-        public IList<User> GetUsers()
+        public IList<User> GetUsers(int page, int pageSize)
         {
+            // If people use too big or small a pagesize, we will revert it to 50
+            if (pageSize > 50 || pageSize <= 0)
+            {
+                pageSize = 50;
+            }
+
+            // To make sure no-one is searching for page -1
+            if (page <= 0)
+            {
+                page = 1;
+            }
+
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
             using var connection = new NpgsqlConnection(connectionString);
 
             try
             {
                 connection.Open();
-                Console.WriteLine("Sucess\n");
 
-                using var cmd = new NpgsqlCommand("SELECT username, useremail FROM Users;", connection);
+                var calculatedOffSet = (page - 1) * pageSize;
+
+                string query = "SELECT userid, username, useremail FROM Users LIMIT @pagesize OFFSET @offset;";
+
+                using var cmd = new NpgsqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("pagesize", pageSize);
+                cmd.Parameters.AddWithValue("offset", calculatedOffSet);
 
                 using var reader = cmd.ExecuteReader();
+
+                UserList = new List<User>();
 
                 while (reader.Read())
                 {
                     User user = new User()
                     {
-                        UserName = reader.GetString(0),
-                        UserEmail = reader.GetString(1)
+                        UserID = reader.GetInt32(0),
+                        userlink = "/api/users/" + reader.GetInt32(0).ToString(),
+                        UserName = reader.GetString(1),
+                        UserEmail = reader.GetString(2)
                     };
 
                     UserList.Add(user);
@@ -47,7 +70,7 @@ namespace HandIn_2_Gr_1
                 return UserList;
 
             }
-            catch (Exception ex)
+            catch
             {
             }
 
@@ -232,7 +255,8 @@ namespace HandIn_2_Gr_1
             }
         }
 
-        public int findNewUserID()
+        //Only used internally
+        int findNewUserID()
         {
             var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
 

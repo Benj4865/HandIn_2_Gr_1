@@ -25,10 +25,12 @@ public class DataServicePerson : IDataServicePerson
 
     public static void Main(string[] args)
     {
-       
+
     }
 
-    public Person GetPerson(string nconst) // Yet to be protected against injection.
+    // In this function we tried using LinQ to set up the query-string. However we decided against doing it for all functions,
+    // Due to it's complexit
+    public Person GetPerson(string nconst)
     {
 
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -37,12 +39,11 @@ public class DataServicePerson : IDataServicePerson
         try
         {
             connection.Open();
-            Console.WriteLine("Sucess\n");
 
             using var cmd = new NpgsqlCommand(
                 @"SELECT nconst, primaryname, birthyear, deathyear, primaryprofession
                     FROM name_basics 
-                    WHERE nconst = @nconst", 
+                    WHERE nconst = @nconst",
                 connection);
 
             cmd.Parameters.AddWithValue("@nconst", nconst);
@@ -53,13 +54,15 @@ public class DataServicePerson : IDataServicePerson
             {
                 var person = new Person
                 {
-                    Nconst = reader.GetString(0),
+                    Nconst = "/api/person/" + reader.GetString(0),
                     Primaryname = reader.IsDBNull(1) ? null : reader.GetString(1),
                     Birthyear = reader.IsDBNull(2) ? null : reader.GetString(2),
                     Deathyear = reader.IsDBNull(3) ? null : reader.GetString(3),
                     Primaryprofessions = reader.IsDBNull(4)
                         ? null
-                        : reader.GetString(4).Split(',').Select(p => new Professions { professionName = p }).ToList()
+                        : reader.GetString(4).Split(',').Select(p => new Professions { professionName = p }).ToList(),
+                    KnownFor = FindKnownForTitles(nconst)
+                    
                 };
 
                 Console.WriteLine($"Data Found: {person.Nconst}, {person.Primaryname}, {person.Birthyear}, {person.Deathyear}");
@@ -93,10 +96,10 @@ public class DataServicePerson : IDataServicePerson
 
             string newNconst = GenerateNextNconst(maxNconst);
             Console.WriteLine($"Generated new nconst: {newNconst}");
-            
-            using var cmd = new NpgsqlCommand("INSERT INTO name_basics (nconst, primaryname, birthyear, deathyear, primaryprofession) " + 
+
+            using var cmd = new NpgsqlCommand("INSERT INTO name_basics (nconst, primaryname, birthyear, deathyear, primaryprofession) " +
                 "VALUES (@nconst, @primaryname, @birthyear, @deathyear, @primaryprofession)" +
-                "RETURNING nconst, primaryname, birthyear, deathyear, primaryprofession ;", 
+                "RETURNING nconst, primaryname, birthyear, deathyear, primaryprofession ;",
                 connection);
 
 
@@ -109,7 +112,7 @@ public class DataServicePerson : IDataServicePerson
                 (object)DBNull.Value);
 
             using var reader = cmd.ExecuteReader();
-          
+
             if (reader.Read())
             {
                 var createdPerson = new Person
@@ -133,12 +136,14 @@ public class DataServicePerson : IDataServicePerson
         }
         return null;
     }
-    private string GetMaxNconst(NpgsqlConnection connection) 
+    
+    private string GetMaxNconst(NpgsqlConnection connection)
     {
         using var cmd = new NpgsqlCommand("SELECT MAX(nconst) FROM name_basics", connection);
         object result = cmd.ExecuteScalar();
         return result != null ? result.ToString() : "nm0000000";
     }
+
     private string GenerateNextNconst(string maxNconst)
     {
         int numerticPart = int.Parse(maxNconst.Substring(2));
@@ -147,7 +152,6 @@ public class DataServicePerson : IDataServicePerson
 
         return "nm" + numerticPart.ToString("D7");
     }
-
 
     public IList<Person> SearchByProfession(string professionname)
     {
@@ -197,7 +201,6 @@ public class DataServicePerson : IDataServicePerson
 
     }
 
-
     public IList<Title> FindKnownForTitles(string Nconst)
     {
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -211,7 +214,7 @@ public class DataServicePerson : IDataServicePerson
             List<Title> titles = new List<Title>();
             List<Person> persons = new List<Person>();
 
-            
+
             using (var cmd = new NpgsqlCommand("SELECT known_for.tconst, title_basics.primarytitle FROM known_for INNER JOIN title_basics ON known_for.tconst = title_basics.tconst WHERE known_for.nconst = '" + Nconst + "' ", connection))
 
             using (var reader = cmd.ExecuteReader())
@@ -220,11 +223,10 @@ public class DataServicePerson : IDataServicePerson
                 {
                     Title title = new Title
                     {
-                        Tconst = reader.GetString(1),
-                        PrimaryTitle = reader.GetString(0)
+                        Tconst = reader.GetString(0),
+                        PrimaryTitle = reader.GetString(1)
                     };
                     titles.Add(title);
-
                 }
             }
 
@@ -262,8 +264,6 @@ public class DataServicePerson : IDataServicePerson
 
     }
 
-
-    
     public IList<Person> SearchByName(string name)
     {
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
@@ -315,78 +315,4 @@ public class DataServicePerson : IDataServicePerson
         return persons;
     }
 
-    public IList<Title> SearchForMovieByTconst(string tconst)
-    {
-        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
-        using var connection = new NpgsqlConnection(connectionString);
-
-        try
-        {
-            connection.Open();
-            Console.WriteLine("Sucess\n");
-
-            List<Title> titles = new List<Title>();
-
-            using var cmd = new NpgsqlCommand("SELECT tconst, primarytitle FROM title_basics where tconst ='tt17156444';", connection);
-
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                Title title = new Title
-                {
-                    PrimaryTitle = reader.GetString(1)
-                };
-
-                titles.Add(title);
-
-            }
-            return titles;
-        }
-
-        catch
-        {
-
-        }
-
-        return null;
-       
-    }
-
-    public IList<Title> SearchByTitle(string PrimaryTitle)
-    {
-        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=" + filecontent + ";Database=imdb";
-        using var connection = new NpgsqlConnection(connectionString);
-
-        try
-        {
-            connection.Open();
-            Console.WriteLine("Sucess\n");
-
-            List<Title> titles = new List<Title>();
-
-            using var cmd = new NpgsqlCommand("SELECT * FROM title_basics WHERE primarytitle = @primarytitle;", connection);
-
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                Console.WriteLine("Primary title" + reader["primarytitle"]);
-                Console.WriteLine("Genres" + reader["genres"]);
-                Console.WriteLine("Release year" + reader["startyear"]);
-
-            }
-            
-        }
-        catch
-        {
-
-        }
-
-        return null;
-
-    }
-    
-
 }
-
-// SELECT t.nconst, t.profession, s.primaryname FROM nm_professions t INNER JOIN name_basics s ON t.nconst = s.nconst where t.nconst = 'nm0006035';
-// Finds name and profession from nconst

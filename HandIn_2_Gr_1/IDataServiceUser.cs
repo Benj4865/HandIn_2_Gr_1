@@ -10,9 +10,9 @@ namespace HandIn_2_Gr_1
     public interface IDataServiceUser
     {
 
-        IList<User> GetUsers();
+        public IList<User> GetUsers(int page, int pageSize);
 
-        void CreateUser(string userName, string password, string useremail);
+        public void CreateUser(string userName, string password, string useremail);
 
         public User SearchUser(string username, string useremail, int userID);
         public User SearchUID(int userID);

@@ -120,7 +120,7 @@ namespace HandIn_2_Gr_1
 
                 using var reader = cmd.ExecuteReader();
 
-                
+                titleList = new List<Title>();
 
                 while (reader.Read())
                 {

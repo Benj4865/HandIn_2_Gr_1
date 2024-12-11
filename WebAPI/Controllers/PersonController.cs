@@ -22,7 +22,7 @@ namespace WebAPI.Controllers
 
         //HTPP person functions
         //HTTP get functions
-        [HttpGet("getperson/{nconst}")]
+        [HttpGet("{nconst}")]
         public IActionResult GetPerson(string nconst)
         {
             var person = DataService.GetPerson(nconst);
