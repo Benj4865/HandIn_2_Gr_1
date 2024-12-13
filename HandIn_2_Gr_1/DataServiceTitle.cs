@@ -15,11 +15,7 @@ namespace HandIn_2_Gr_1
     public class DataServiceTitle : IDataServiceTitle
     {
 
-        
-        
-
         public static IList<Title>? titleList = new List<Title>();
-
 
         // Currently only supports 1 genre, and a new function is needed to insert into title_genre
         public Title CreateTitle(string tconst, string titletype, string primaryTitle, string originalTitle, string isAdult, string startyear, string endyear, int runtimeMinutes, string genres, string posterlink, string plot)
@@ -35,9 +31,6 @@ namespace HandIn_2_Gr_1
                 }
                 connection.Open();
 
-                string query = "INSERT INTO title_basics (tconst, titletype, primaryTitle, originalTitle, isAdult, startyear, endyear, runtimeMinutes, genres, poster, plot) VALUES (@tconst, @titletype, @primaryTitle, @originalTitle, @isAdult, @startyear, @endyear, @runtimeMinutes, @genres, @posterlink, @plot);";
-                using var cmd = new NpgsqlCommand(query, connection);
-
                 bool isAdultSQL;
 
                 if (isAdult.ToLower() == "t")
@@ -52,6 +45,9 @@ namespace HandIn_2_Gr_1
                 {
                     isAdultSQL = false;
                 }
+
+                string query = "INSERT INTO title_basics (tconst, titletype, primaryTitle, originalTitle, isAdult, startyear, endyear, runtimeMinutes, genres, poster, plot) VALUES (@tconst, @titletype, @primaryTitle, @originalTitle, @isAdult, @startyear, @endyear, @runtimeMinutes, @genres, @posterlink, @plot);";
+                using var cmd = new NpgsqlCommand(query, connection);
 
                 cmd.Parameters.AddWithValue("tconst", tconst);
                 cmd.Parameters.AddWithValue("titletype", titletype);
