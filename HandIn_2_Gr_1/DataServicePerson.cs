@@ -17,9 +17,6 @@ namespace HandIn_2_Gr_1;
 public class DataServicePerson : IDataServicePerson
 {
     
-    
-
-
     public IList<Person> PersonList = new List<Person>();
     public static IList<Title>? titleList = new List<Title>();
 
