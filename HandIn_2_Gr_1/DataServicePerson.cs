@@ -26,7 +26,7 @@ public class DataServicePerson : IDataServicePerson
     }
 
     // In this function we tried using LinQ to set up the query-string. However we decided against doing it for all functions,
-    // Due to it's complexit.
+    // Due to it's complexity.
     public Person GetPerson(string nconst)
     {
 

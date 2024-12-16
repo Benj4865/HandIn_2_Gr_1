@@ -84,7 +84,6 @@ namespace HandIn_2_Gr_1
             }
         }
         // A list of titles need to be added, so that more that one searchresult can be returned
-        
         public IList<Title> SearchTitleByName(string name, int pageSize, int page)
         {
             var connectionString = Config.GetConnectionString();
@@ -147,6 +146,7 @@ namespace HandIn_2_Gr_1
                     title.PrimaryTitle = reader.GetString(0);
 
                 }
+                
                 return title;
             }
             catch
@@ -399,7 +399,6 @@ namespace HandIn_2_Gr_1
             }
             return null;
         }
-
 
         public static IList<Title> TitleRatingFromTconst(string ParentTconst)
         {
