@@ -16,8 +16,8 @@ namespace HandIn_2_Gr_1
     public class DataServiceUser : IDataServiceUser
     {
 
-        
-        
+
+
 
         public static IList<User>? UserList = new List<User>();
 
@@ -94,7 +94,7 @@ namespace HandIn_2_Gr_1
             }
         }
 
-        
+
 
         // This funciton deletes a user from the input-data
         public void DeleteUser(int userID, string password)
@@ -168,6 +168,8 @@ namespace HandIn_2_Gr_1
 
         public User SearchUID(int userID)
         {
+            //Takes
+            //userID = Config.HardCodedUserID();
 
             var connectionString = Config.GetConnectionString();
 
@@ -193,7 +195,6 @@ namespace HandIn_2_Gr_1
                     };
                 }
 
-                // Can be added again if function input is modified to also include logged in user.
 
                 //var searchvalue = username + " " + useremail + " " + userID;
                 //LogSearchHistory(userID, searchvalue);
@@ -299,7 +300,7 @@ namespace HandIn_2_Gr_1
             {
             }
         }
-        
+
         public IList<string> ShowSearchHistory(int userid)
         {
             var connectionString = Config.GetConnectionString();

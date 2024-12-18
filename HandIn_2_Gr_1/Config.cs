@@ -8,6 +8,12 @@ namespace HandIn_2_Gr_1
 {
     public static class Config
     {
+        public static int Logged_In_User()
+        {
+            int loggedInID = 1;
+
+            return loggedInID;
+        }
 
         public static string GetConnectionString()
         {
