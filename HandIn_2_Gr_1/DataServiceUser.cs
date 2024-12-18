@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Xml.Linq;
 using Microsoft.EntityFrameworkCore.Metadata;
+using System.Runtime.CompilerServices;
 
 
 namespace HandIn_2_Gr_1
@@ -17,9 +18,9 @@ namespace HandIn_2_Gr_1
     {
 
 
-
-
+        // This list is used in multiple functions below.
         public static IList<User>? UserList = new List<User>();
+
 
         // This function return a list of all users in database
         public IList<User> GetUsers(int page, int pageSize)
@@ -54,10 +55,10 @@ namespace HandIn_2_Gr_1
                     };
 
                     UserList.Add(user);
-
+                    
                 }
-                return UserList;
 
+                return UserList;
             }
             catch
             {
@@ -68,30 +69,42 @@ namespace HandIn_2_Gr_1
 
         }
 
-        //This method does not yet check for existing userames when making a new user.
+        //This method does not yet check for existing usernames when making a new user.
         //Should be implemented later
         public void CreateUser(string userName, string password, string useremail)
         {
             var connectionString = Config.GetConnectionString();
 
             using var connection = new NpgsqlConnection(connectionString);
-            try
+            if (doesUserNameExitst(userName) == false)
             {
-                connection.Open();
+                try
+                {
+                    connection.Open();
 
-                string query = "INSERT INTO Users (userid, username, userpassword, useremail) VALUES (@userID, @username, @userpassword, @useremail);";
-                using var cmd = new NpgsqlCommand(query, connection);
-                cmd.Parameters.AddWithValue("userID", findNewUserID());
-                cmd.Parameters.AddWithValue("username", userName);
-                cmd.Parameters.AddWithValue("userpassword", password);
-                cmd.Parameters.AddWithValue("useremail", useremail);
-                cmd.ExecuteNonQuery();
+                    string query = "INSERT INTO Users (userid, username, userpassword, useremail) VALUES (@userID, @username, @userpassword, @useremail);";
+                    using var cmd = new NpgsqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("userID", findNewUserID());
+                    cmd.Parameters.AddWithValue("username", userName);
+                    cmd.Parameters.AddWithValue("userpassword", password);
+                    cmd.Parameters.AddWithValue("useremail", useremail);
+                    cmd.ExecuteNonQuery();
+
+                }
+                catch
+                {
+
+                }
+
+                UpdateSeachHistory update = new UpdateSeachHistory();
+                update.LogSearchHistory(Config.HardCodedUserID, "User Created, With username: " + userName + ", and password: " + password + " and email: " + useremail);
 
             }
-            catch
+            else
             {
-
+                Console.WriteLine("something went wrong");
             }
+
         }
 
 
@@ -118,6 +131,8 @@ namespace HandIn_2_Gr_1
             catch (Exception ex)
             {
             }
+            UpdateSeachHistory update = new UpdateSeachHistory();
+            update.LogSearchHistory(Config.HardCodedUserID, "User: " + userID.ToString() + " deleted");
         }
 
         // Currently only returns the last userhit from the database
@@ -277,8 +292,39 @@ namespace HandIn_2_Gr_1
             {
                 return (0);
             }
+        }
 
+        bool doesUserNameExitst(string username)
+        {
+            var connectionString = Config.GetConnectionString();
+            using var connection = new NpgsqlConnection(connectionString);
 
+            try
+            {
+                connection.Open();
+
+                string query = "SELECT username FROM users WHERE username = @username;";
+                using var cmd = new NpgsqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("username", username);
+
+                using var reader = cmd.ExecuteReader();
+
+                reader.Read();
+                var name = reader.GetString(0);
+
+                if (name.Length >= 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return true;
+            }
         }
 
         public void LogSearchHistory(int userid, string searchvalue)
