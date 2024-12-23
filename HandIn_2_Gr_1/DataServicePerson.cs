@@ -259,7 +259,7 @@ public class DataServicePerson : IDataServicePerson
         }
     }
 
-    // Is not yet protected against SQL injection
+    
     public IList<Person> SearchByProfession(string professionname, int pagesize, int page)
     {
         var connectionString = Config.GetConnectionString();

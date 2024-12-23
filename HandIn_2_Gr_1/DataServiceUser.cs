@@ -131,11 +131,10 @@ namespace HandIn_2_Gr_1
             catch (Exception ex)
             {
             }
-            UpdateSeachHistory update = new UpdateSeachHistory();
-            update.LogSearchHistory(Config.HardCodedUserID, "User: " + userID.ToString() + " deleted");
+            
         }
 
-        // Currently only returns the last userhit from the database
+        
         public IList<User> SearchUser(string username, string useremail, int userID, int pagesize, int page)
         {
 
@@ -172,6 +171,13 @@ namespace HandIn_2_Gr_1
 
                     users.Add(user);
                 }
+
+                // Adds searchvalue to searchhistory 
+                var searchvalue = userID.ToString();
+                UpdateSeachHistory update = new UpdateSeachHistory();
+
+                int loggedinUser = Config.HardCodedUserID;
+                update.LogSearchHistory(loggedinUser, searchvalue);
 
                 return users;
             }
@@ -211,8 +217,12 @@ namespace HandIn_2_Gr_1
                 }
 
 
-                //var searchvalue = username + " " + useremail + " " + userID;
-                //LogSearchHistory(userID, searchvalue);
+                // Adds searchvalue to searchhistory
+                var searchvalue = userID.ToString();
+                UpdateSeachHistory update = new UpdateSeachHistory();
+
+                int loggedinUser = Config.HardCodedUserID;
+                update.LogSearchHistory(loggedinUser, searchvalue);
 
                 return user;
             }
@@ -266,7 +276,7 @@ namespace HandIn_2_Gr_1
             }
         }
 
-        //Only used internally
+        //Only used internally, therefore not public
         int findNewUserID()
         {
             var connectionString = Config.GetConnectionString();
@@ -324,26 +334,6 @@ namespace HandIn_2_Gr_1
             catch
             {
                 return true;
-            }
-        }
-
-        public void LogSearchHistory(int userid, string searchvalue)
-        {
-            var connectionString = Config.GetConnectionString();
-
-            using var connection = new NpgsqlConnection(connectionString);
-            try
-            {
-                connection.Open();
-
-                string query = "INSERT INTO SearchHistory (userid, searchvalue) VALUES (@userid, @searchvalue);";
-                using var cmd = new NpgsqlCommand(query, connection);
-                cmd.Parameters.AddWithValue("userid", userid);
-                cmd.Parameters.AddWithValue("searchvalue", searchvalue);
-                cmd.ExecuteNonQuery();
-            }
-            catch
-            {
             }
         }
 
