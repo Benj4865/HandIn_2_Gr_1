@@ -131,7 +131,6 @@ namespace HandIn_2_Gr_1
             catch (Exception ex)
             {
             }
-            
         }
 
         
@@ -333,7 +332,7 @@ namespace HandIn_2_Gr_1
             }
             catch
             {
-                return true;
+                return false;
             }
         }
 
