@@ -209,7 +209,6 @@ public class DataServicePerson : IDataServicePerson
         return null;
     }
 
-
     private string GetMaxNconst(NpgsqlConnection connection)
     {
         using var cmd = new NpgsqlCommand("SELECT MAX(nconst) FROM name_basics", connection);
@@ -342,28 +341,6 @@ public class DataServicePerson : IDataServicePerson
             }
 
             return titles;
-
-
-            // using (var cmd = new NpgsqlCommand("SELECT primaryname FROM name_basics WHERE nconst = 'nm0001268';'"))
-
-            /*
-            using (var reader = cmd.ExecuteReader())
-            {
-                if (reader.Read())
-                {
-                    foreach (var title in titles)
-
-                    {
-                        Person person = new Person
-                        {
-                            Primaryname = reader.GetString(0),
-                        };
-                        persons.Add(person);
-
-                    }
-                }
-
-            }*/
 
         }
 

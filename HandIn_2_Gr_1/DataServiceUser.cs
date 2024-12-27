@@ -229,7 +229,6 @@ namespace HandIn_2_Gr_1
             {
                 return null;
             }
-
         }
 
         public void UpdateUser(int userID, string userName, string userPassword, string userEmail)
