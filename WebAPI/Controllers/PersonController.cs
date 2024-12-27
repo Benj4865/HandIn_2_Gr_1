@@ -116,7 +116,7 @@ namespace WebAPI.Controllers
         }
 
         // Here we try to handle badrequest
-        [HttpGet("bookmarkperson/{nconst}")]
+        [HttpGet("bookmarkperson/{linkstring}")]
         public IActionResult bookmarkPerson(string linkstring)
         {
             if (DataService.bookmarkPerson(linkstring))
@@ -127,8 +127,6 @@ namespace WebAPI.Controllers
             {
                 return BadRequest();
             }
-
-
         }
 
         /*

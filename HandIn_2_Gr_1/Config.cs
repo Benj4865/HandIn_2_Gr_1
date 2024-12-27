@@ -28,8 +28,6 @@ namespace HandIn_2_Gr_1
 
         public static int HardCodedUserID { get; } = 1;
 
-
-
     }
 
 }

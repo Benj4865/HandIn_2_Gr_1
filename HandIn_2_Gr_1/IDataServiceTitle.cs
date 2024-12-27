@@ -19,5 +19,7 @@ namespace HandIn_2_Gr_1
         public Title updateTitle(string tconst, string titletype, string primaryTitle, string originalTitle, string isAdult, string startyear, string endyear, int runtimeMinutes, string genres, string posterlink, string plot);
 
         public void DeleteTitle(string tconst);
+
+        public bool bookmarkTitle(string linkstring);
     }
 }

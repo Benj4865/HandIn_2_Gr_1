@@ -74,6 +74,20 @@ namespace WebAPI.Controllers
             DataService.DeleteTitle(data.Tconst);
             return Ok();
         }
+
+        // Here we try to handle badrequest
+        [HttpGet("bookmarktitle/{linkstring}")]
+        public IActionResult bookmarkTitle(string linkstring)
+        {
+            if (DataService.bookmarkTitle(linkstring))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }
 

@@ -11,7 +11,7 @@ namespace HandIn_2_Gr_1
         public static string extractXconst(string inputstring)
         {
 
-            string[] parts = inputstring.Split('/');
+            string[] parts = inputstring.Split( new string[] { "%2F"}, StringSplitOptions.None);
 
             return parts[parts.Length - 1];
         }

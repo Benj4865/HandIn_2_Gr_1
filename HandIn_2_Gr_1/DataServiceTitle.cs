@@ -95,7 +95,7 @@ namespace HandIn_2_Gr_1
 
                 var calculatedOffSet = (page - 1) * pageSize;
 
-                string query = "SELECT primarytitle FROM title_basics WHERE primarytitle ILIKE @searchString LIMIT @pagesize OFFSET @offset ;";
+                string query = "SELECT tconst, primarytitle, poster FROM title_basics WHERE primarytitle ILIKE @searchString LIMIT @pagesize OFFSET @offset ;";
                 using var cmd = new NpgsqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("searchString", "%" + name + "%");
                 cmd.Parameters.AddWithValue("pagesize",pageSize);
@@ -110,7 +110,10 @@ namespace HandIn_2_Gr_1
 
                     Title title = new Title
                     {
-                        PrimaryTitle = reader.GetString(0)
+                        Tconst = "/api/title/" + reader.GetString(0),
+                        PrimaryTitle = reader.GetString(1),
+                        PosterLink = reader.GetString(2)
+
                     };
                     
                     titleList.Add(title);
@@ -470,6 +473,42 @@ namespace HandIn_2_Gr_1
                 Console.WriteLine("Something went wrong");
             }
             return titleList;
+        }
+
+        public bool bookmarkTitle(string linkstring)
+        {
+            string tconst = "";
+
+            try
+            {
+                tconst = ExtractString.extractXconst(linkstring);
+            }
+            catch
+            {
+                Console.WriteLine("Something went wrong");
+                tconst = "Error extracting tconst";
+                return false;
+            }
+
+            var connectionString = Config.GetConnectionString();
+
+            using var connection = new NpgsqlConnection(connectionString);
+            try
+            {
+                connection.Open();
+                int userID = Config.Logged_In_User();
+
+                string query = "INSERT INTO saved_movies (userid, tconst) VALUES (@userid, @tconst);";
+                using var cmd = new NpgsqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("userid", userID);
+                cmd.Parameters.AddWithValue("tconst", tconst);
+                cmd.ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
