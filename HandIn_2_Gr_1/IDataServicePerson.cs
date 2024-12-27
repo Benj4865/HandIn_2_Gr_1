@@ -18,6 +18,8 @@ namespace HandIn_2_Gr_1
         public Person updatePerson(string nconst, string primaryname, string birthyear, string deathyear, string primaryprofession, string knownForTitles);
         public IList<Person> SearchByProfession(string professionname, int pagesize, int page);
 
+        public bool bookmarkPerson(string linkstring);
+
         //public IList<Title> FindKnownForTitles(string Nconst);
 
     }

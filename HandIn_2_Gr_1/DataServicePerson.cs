@@ -8,6 +8,7 @@ using HandIn_2_Gr_1.Types;
 using System.Security.Cryptography;
 using System.Reflection.Metadata.Ecma335;
 using System.Diagnostics.Metrics;
+using System.Buffers;
 
 
 
@@ -16,7 +17,7 @@ namespace HandIn_2_Gr_1;
 
 public class DataServicePerson : IDataServicePerson
 {
-    
+
     public IList<Person> PersonList = new List<Person>();
     public static IList<Title>? titleList = new List<Title>();
 
@@ -78,7 +79,8 @@ public class DataServicePerson : IDataServicePerson
         return null;
     }
 
-    //Here we experimented with using the Person-class as input to the function, instead of passing seperate parameters
+    //Here we experimented with using the Person-class as input to the function, instead of passing seperate parameters.
+    //This makes it more scalable. However we figured this our late in the project, and did not have time to implement it throughtout the project.
     public Person createPerson(Person newPerson)
     {
         var connectionString = Config.GetConnectionString();
@@ -258,7 +260,6 @@ public class DataServicePerson : IDataServicePerson
         }
     }
 
-    
     public IList<Person> SearchByProfession(string professionname, int pagesize, int page)
     {
         var connectionString = Config.GetConnectionString();
@@ -405,5 +406,42 @@ public class DataServicePerson : IDataServicePerson
         }
         return persons;
     }
+
+    public bool bookmarkPerson(string linkstring)
+    {
+        string nconst = "";
+
+        try
+        {
+            nconst = ExtractString.extractXconst(linkstring);
+        }
+        catch 
+        {
+            Console.WriteLine("Something went wrong");
+            nconst = "Error extracting nconst";
+            return false;
+        }
+
+        var connectionString = Config.GetConnectionString();
+
+        using var connection = new NpgsqlConnection(connectionString);
+        try
+        {
+            connection.Open();
+            int userID = Config.Logged_In_User();
+
+            string query = "INSERT INTO saved_names (userid, nconst) VALUES (@userid, @nconst);";
+            using var cmd = new NpgsqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("userid", userID);
+            cmd.Parameters.AddWithValue("nconst", nconst);
+            cmd.ExecuteNonQuery();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
 
 }

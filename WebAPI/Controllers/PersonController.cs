@@ -1,6 +1,7 @@
 ﻿using HandIn_2_Gr_1;
 using HandIn_2_Gr_1.Types;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using WebAPI.PostModels;
 
 namespace WebAPI.Controllers
@@ -73,9 +74,9 @@ namespace WebAPI.Controllers
                     });
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-            
+
                 return StatusCode(500, new
                 {
                     message = "An internal server error occured.",
@@ -95,7 +96,7 @@ namespace WebAPI.Controllers
 
 
         [HttpGet("profession/{profession}")]
-        public IActionResult SearchByProfession(string profession, int pagesize=50, int page= 1)
+        public IActionResult SearchByProfession(string profession, int pagesize = 50, int page = 1)
         {
             // If people use too big or small a pagesize, we will revert it to 50
             if (pagesize > 50 || pagesize <= 0)
@@ -110,8 +111,24 @@ namespace WebAPI.Controllers
             }
 
             var professionList = DataService.SearchByProfession(profession, pagesize, page);
-            var pageObject = new Paging { people = professionList,  nextpage = "/api/person/profession/" + profession + "?pagesize=" + pagesize.ToString() + "&page=" + (page + 1).ToString(), previouspage = "/api/person/profession/" + profession + "?pagesize=" + pagesize.ToString() + "&page=" + (page - 1).ToString() };
+            var pageObject = new Paging { people = professionList, nextpage = "/api/person/profession/" + profession + "?pagesize=" + pagesize.ToString() + "&page=" + (page + 1).ToString(), previouspage = "/api/person/profession/" + profession + "?pagesize=" + pagesize.ToString() + "&page=" + (page - 1).ToString() };
             return Ok(pageObject);
+        }
+
+        // Here we try to handle badrequest
+        [HttpGet("bookmarkperson/{nconst}")]
+        public IActionResult bookmarkPerson(string linkstring)
+        {
+            if (DataService.bookmarkPerson(linkstring))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+
         }
 
         /*
@@ -125,5 +142,5 @@ namespace WebAPI.Controllers
 
     }
 
-    
+
 }
