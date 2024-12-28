@@ -88,9 +88,9 @@ namespace WebAPI.Controllers
 
 
         [HttpPost("updateperson/")]
-        public IActionResult UpdatePerson(PersonBody data, string UpdatePrimaryprofession, string UpdateKnownFor)
+        public IActionResult UpdatePerson(string Nconst, string Primaryname, string Birthyear, string Deathyear,  string UpdatePrimaryprofession, string UpdateKnownFor)
         {
-            var person = DataService.updatePerson(data.Nconst, data.Primaryname, data.Birthyear, data.Deathyear, UpdatePrimaryprofession, UpdateKnownFor);
+            var person = DataService.updatePerson(Nconst, Primaryname, Birthyear, Deathyear, UpdatePrimaryprofession, UpdateKnownFor);
             return Ok(person);
         }
 
