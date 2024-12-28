@@ -55,7 +55,6 @@ namespace HandIn_2_Gr_1
                     };
 
                     UserList.Add(user);
-                    
                 }
 
                 return UserList;
@@ -65,12 +64,8 @@ namespace HandIn_2_Gr_1
             }
 
             return null;
-
-
         }
 
-        //This method does not yet check for existing usernames when making a new user.
-        //Should be implemented later
         public void CreateUser(string userName, string password, string useremail)
         {
             var connectionString = Config.GetConnectionString();
@@ -104,10 +99,7 @@ namespace HandIn_2_Gr_1
             {
                 Console.WriteLine("something went wrong");
             }
-
         }
-
-
 
         // This funciton deletes a user from the input-data
         public void DeleteUser(int userID, string password)
@@ -119,12 +111,12 @@ namespace HandIn_2_Gr_1
             {
                 connection.Open();
 
-                // Corrected query
+                
                 string query = "DELETE FROM Users WHERE userid = '" + userID + "' AND userpassword = '" + password + "';";
 
                 using var cmd = new NpgsqlCommand(query, connection);
 
-                // Execute the command
+                
                 int rowsAffected = cmd.ExecuteNonQuery();
 
             }
@@ -188,8 +180,6 @@ namespace HandIn_2_Gr_1
 
         public User SearchUID(int userID)
         {
-            //Takes
-            //userID = Config.HardCodedUserID();
 
             var connectionString = Config.GetConnectionString();
 
