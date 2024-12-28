@@ -205,7 +205,6 @@ namespace HandIn_2_Gr_1
                     };
                 }
 
-
                 // Adds searchvalue to searchhistory
                 var searchvalue = userID.ToString();
                 UpdateSeachHistory update = new UpdateSeachHistory();
