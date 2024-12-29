@@ -1,7 +1,9 @@
 ﻿using HandIn_2_Gr_1.Types;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security;
@@ -98,7 +100,7 @@ namespace HandIn_2_Gr_1
                 string query = "SELECT tconst, primarytitle, poster FROM title_basics WHERE primarytitle ILIKE @searchString LIMIT @pagesize OFFSET @offset ;";
                 using var cmd = new NpgsqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("searchString", "%" + name + "%");
-                cmd.Parameters.AddWithValue("pagesize",pageSize);
+                cmd.Parameters.AddWithValue("pagesize", pageSize);
                 cmd.Parameters.AddWithValue("offset", calculatedOffSet);
 
                 using var reader = cmd.ExecuteReader();
@@ -115,7 +117,7 @@ namespace HandIn_2_Gr_1
                         PosterLink = reader.GetString(2)
 
                     };
-                    
+
                     titleList.Add(title);
                 }
                 return titleList;
@@ -135,9 +137,9 @@ namespace HandIn_2_Gr_1
             {
                 connection.Open();
 
-                string query = "SELECT primarytitle FROM title_basics WHERE tconst = @tconst;";
+                string query = "SELECT primarytitle, titletype,originaltitle, isadult, startyear, endyear, runtimeminutes, poster, plot FROM title_basics WHERE tconst = @tconst;";
                 using var cmd = new NpgsqlCommand(query, connection);
-                cmd.Parameters.AddWithValue("tconst",tconst);
+                cmd.Parameters.AddWithValue("tconst", tconst);
 
                 using var reader = cmd.ExecuteReader();
 
@@ -147,9 +149,25 @@ namespace HandIn_2_Gr_1
                 {
                     title.Tconst = "/api/title/" + tconst;
                     title.PrimaryTitle = reader.GetString(0);
+                    title.TitleType = reader.GetString(1);
+                    title.OriginalTitle = reader.GetString(2);
+                    bool adult = reader.GetBoolean(3);
+                    if (adult = true)
+                    {
+                        title.IsAdult = "Yes";
+                    }
+                    else
+                    {
+                        title.IsAdult = "No";
+                    }
+                    title.StartYear = reader.GetString(4);
+                    title.EndYear = reader.GetString(5);
+                    title.RuntimeMinutes = reader.GetInt32(6);
+                    title.PosterLink = reader.GetString(7);
+                    title.plot = reader.GetString(8);
 
                 }
-                
+
                 return title;
             }
             catch
@@ -317,12 +335,12 @@ namespace HandIn_2_Gr_1
             {
                 connection.Open();
 
-                
+
                 string query = "DELETE FROM title_basics WHERE tconst = @tconst;";
 
                 using var cmd = new NpgsqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("tconst", tconst);
-                
+
                 int rowsAffected = cmd.ExecuteNonQuery();
 
             }
@@ -343,7 +361,7 @@ namespace HandIn_2_Gr_1
                 string query = "SELECT tconst FROM title_basics WHERE tconst = @tconst;";
                 using var cmd = new NpgsqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("tconst", tconst);
-                
+
                 using var reader = cmd.ExecuteReader();
 
                 reader.Read();

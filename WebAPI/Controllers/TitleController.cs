@@ -71,7 +71,7 @@ namespace WebAPI.Controllers
         [HttpPost("deletetitle/")]
         public IActionResult deleteTitle(TitleBody data)
         {
-            DataService.DeleteTitle(data.Tconst);
+            DataService.DeleteTitle(data .Tconst);
             return Ok();
         }
 
