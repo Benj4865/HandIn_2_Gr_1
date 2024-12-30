@@ -109,7 +109,7 @@ namespace HandIn_2_Gr_1
                 titleList = new List<Title>();
                 
 
-                while (reader.Read())
+                while (reader.Read()) 
                 {
                     string posterlink_Temp = null;
 
