@@ -86,6 +86,7 @@ namespace HandIn_2_Gr_1
             }
         }
         // A list of titles need to be added, so that more that one searchresult can be returned
+
         public IList<Title> SearchTitleByName(string name, int pageSize, int page)
         {
             var connectionString = Config.GetConnectionString();
@@ -97,7 +98,7 @@ namespace HandIn_2_Gr_1
 
                 var calculatedOffSet = (page - 1) * pageSize;
 
-                string query = "SELECT tconst, primarytitle, poster FROM title_basics WHERE primarytitle ILIKE @searchString LIMIT @pagesize OFFSET @offset ;";
+                string query = "SELECT tconst, primarytitle, poster, titletype, originaltitle, startyear, endyear, runtimeminutes, plot FROM title_basics WHERE primarytitle ILIKE @searchString LIMIT @pagesize OFFSET @offset;";
                 using var cmd = new NpgsqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("searchString", "%" + name + "%");
                 cmd.Parameters.AddWithValue("pagesize", pageSize);
@@ -106,16 +107,41 @@ namespace HandIn_2_Gr_1
                 using var reader = cmd.ExecuteReader();
 
                 titleList = new List<Title>();
+                
 
                 while (reader.Read())
                 {
+                    string posterlink_Temp = null;
+
+                    if (!reader.IsDBNull(2))
+                    {
+                        posterlink_Temp = reader.GetString(2); 
+                    }
+
+                    int runtime_Temp = 0;
+                    if (!reader.IsDBNull(7))
+                    {
+                        runtime_Temp = reader.GetInt32(7);
+                    }
+
+                    string plot_Temp = null;
+                    if (!reader.IsDBNull(8))
+                    {
+                        plot_Temp = reader.GetString(8);
+                    }
+
 
                     Title title = new Title
                     {
                         Tconst = "/api/title/" + reader.GetString(0),
                         PrimaryTitle = reader.GetString(1),
-                        PosterLink = reader.GetString(2)
-
+                        PosterLink = posterlink_Temp,
+                        TitleType = reader.GetString(3),
+                        OriginalTitle = reader.GetString(4),
+                        StartYear = reader.GetString(5),
+                        EndYear = reader.GetString(6),
+                        RuntimeMinutes = runtime_Temp,
+                        plot = plot_Temp,
                     };
 
                     titleList.Add(title);

@@ -8,7 +8,7 @@ namespace HandIn_2_Gr_1.Types
 {
     public class Professions
     {
-        public int Nconst { get; set; } // rettet fre professionsID husk at spørge om det er korrekt!
+        public int Nconst { get; set; }
 
         public string professionName { get; set; }
 
