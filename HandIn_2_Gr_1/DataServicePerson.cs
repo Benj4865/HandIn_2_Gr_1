@@ -135,7 +135,26 @@ public class DataServicePerson : IDataServicePerson
         return null;
     }
 
+    public void DeletePerson(string nconst)
+    {
+        var connectionString = Config.GetConnectionString();
 
+        using var connection = new NpgsqlConnection(connectionString);
+        try
+        {
+            connection.Open();
+
+            string query = "DELETE FROM name_basics WHERE nconst = @nconst;";
+            using var cmd = new NpgsqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("nconst", nconst);
+
+            int rowsAffected = cmd.ExecuteNonQuery();
+
+        }
+        catch (Exception ex)
+        {
+        }
+    }
     public Person updatePerson(string nconst, string primaryname, string birthyear, string deathyear, string primaryprofession, string knownForTitles)
     {
         var connectionString = Config.GetConnectionString();
