@@ -104,6 +104,13 @@ namespace WebAPI.Controllers
             return Ok(person);
         }
 
+        [HttpPost("deleteperson/{nconst}")]
+        public IActionResult DeletePerson(string nconst)
+        {
+            DataService.DeletePerson(nconst);
+            return Ok();
+        }
+
 
         [HttpGet("profession/{profession}")]
         public IActionResult SearchByProfession(string profession, int pagesize = 50, int page = 1)

@@ -10,7 +10,7 @@ namespace HandIn_2_Gr_1.Types
     {
         public int UserID { get; set; } = 0;
 
-        //This is added to give at place to selfrefrence in the webapi
+        //This is added to give at place to selfrefrence in the WebAPI
         public string userlink {  get; set; }
 
         public string UserName { get; set; } = null;

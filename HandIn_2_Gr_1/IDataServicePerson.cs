@@ -20,7 +20,7 @@ namespace HandIn_2_Gr_1
 
         public bool bookmarkPerson(string linkstring);
 
-        //public IList<Title> FindKnownForTitles(string Nconst);
+        public void DeletePerson(string nconst);
 
     }
 }
