@@ -54,7 +54,7 @@ namespace WebAPI.Controllers
 
         //HTTP create functions
         //We also try to implement errorhandling if the creation of the person, fails
-        [HttpPost("createperson")]
+        [HttpPost("createperson/")]
         public IActionResult createPerson(string Primaryname, string Birthyear, string Deathyear)
         {
             try
