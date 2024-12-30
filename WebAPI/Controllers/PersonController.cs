@@ -53,12 +53,20 @@ namespace WebAPI.Controllers
 
 
         //HTTP create functions
+        //We also try to implement errorhandling if the creation of the person, fails
         [HttpPost("createperson")]
-        public IActionResult createPerson([FromBody] Person newPerson)
+        public IActionResult createPerson(string Primaryname, string Birthyear, string Deathyear)
         {
             try
             {
-                var createdPerson = DataService.createPerson(newPerson);
+                Person newperson = new Person
+                {
+                    Primaryname = Primaryname,
+                    Birthyear = Birthyear,
+                    Deathyear = Deathyear
+                };
+
+                var createdPerson = DataService.createPerson(newperson);
                 if (createdPerson != null)
                 {
                     return Ok(new
@@ -85,7 +93,6 @@ namespace WebAPI.Controllers
             }
         }
         // HTTP Update functions
-
 
         //Here we split up the input to the function, instead of using the Person-Body
         //This is due to the way we send data from the fronten. It is not the prettiest solution
