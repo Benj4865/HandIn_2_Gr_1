@@ -68,10 +68,10 @@ namespace WebAPI.Controllers
         }
 
         //Delete
-        [HttpPost("deletetitle/")]
-        public IActionResult deleteTitle(TitleBody data)
+        [HttpPost("deletetitle/{tconst}")]
+        public IActionResult deleteTitle(string tconst)
         {
-            DataService.DeleteTitle(data .Tconst);
+            DataService.DeleteTitle(tconst);
             return Ok();
         }
 
