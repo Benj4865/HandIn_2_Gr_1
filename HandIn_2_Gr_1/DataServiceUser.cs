@@ -92,7 +92,7 @@ namespace HandIn_2_Gr_1
                 }
 
                 UpdateSeachHistory update = new UpdateSeachHistory();
-                update.LogSearchHistory(Config.HardCodedUserID, "User Created, With username: " + userName + ", and password: " + password + " and email: " + useremail);
+                update.LogSearchHistory(Config.Logged_In_User(), "User Created, With username: " + userName + ", and password: " + password + " and email: " + useremail);
 
             }
             else
@@ -167,7 +167,7 @@ namespace HandIn_2_Gr_1
                 var searchvalue = userID.ToString();
                 UpdateSeachHistory update = new UpdateSeachHistory();
 
-                int loggedinUser = Config.HardCodedUserID;
+                int loggedinUser = Config.Logged_In_User();
                 update.LogSearchHistory(loggedinUser, searchvalue);
 
                 return users;
@@ -209,7 +209,7 @@ namespace HandIn_2_Gr_1
                 var searchvalue = userID.ToString();
                 UpdateSeachHistory update = new UpdateSeachHistory();
 
-                int loggedinUser = Config.HardCodedUserID;
+                int loggedinUser = Config.Logged_In_User();
                 update.LogSearchHistory(loggedinUser, searchvalue);
 
                 return user;

@@ -197,7 +197,7 @@ public class DataServicePerson : IDataServicePerson
 
                 if (primaryprofession.Length >= 1)
                 {
-                    string query = "UPDATE name_basics SET primaryprofession = @primaryprofession WHERE nconst = @nconst;";
+                    string query = "INSER INTO nm_professions (nconst, profession) VALUES (@nconst, primaryprofession);";
                     using var cmd = new NpgsqlCommand(query, connection);
                     cmd.Parameters.AddWithValue("nconst", nconst);
                     cmd.Parameters.AddWithValue("primaryprofession", primaryprofession);
@@ -206,7 +206,7 @@ public class DataServicePerson : IDataServicePerson
 
                 if (knownForTitles.Length >= 1)
                 {
-                    string query = "UPDATE name_basics SET knownfortitles = @knownfortitles WHERE nconst = @nconst;";
+                    string query = "INSERT INTO known_for (nconst, tconst) VALUES(@nconst, knownfortitles);";
                     using var cmd = new NpgsqlCommand(query, connection);
                     cmd.Parameters.AddWithValue("nconst", nconst);
                     cmd.Parameters.AddWithValue("knownfortitles", knownForTitles);

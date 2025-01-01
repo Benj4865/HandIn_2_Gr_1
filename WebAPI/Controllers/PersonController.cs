@@ -95,7 +95,7 @@ namespace WebAPI.Controllers
         // HTTP Update functions
 
         //Here we split up the input to the function, instead of using the Person-Body
-        //This is due to the way we send data from the fronten. It is not the prettiest solution
+        //This is due to the way we send data from the frontend. It is not the prettiest solution
         //, but it was the only way we could make it work
         [HttpPost("updateperson/")]
         public IActionResult UpdatePerson(string Nconst, string Primaryname, string Birthyear, string Deathyear,  string UpdatePrimaryprofession, string UpdateKnownFor)

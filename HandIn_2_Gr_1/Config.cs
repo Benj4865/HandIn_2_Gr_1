@@ -26,8 +26,6 @@ namespace HandIn_2_Gr_1
             return "Host=cit.ruc.dk;Port=5432;Username=cit01;Password=" + password + ";Database=cit01";
         }
 
-        public static int HardCodedUserID { get; } = 1;
-
     }
 
 }

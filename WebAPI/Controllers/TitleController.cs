@@ -60,6 +60,9 @@ namespace WebAPI.Controllers
         }
 
         //Update
+        // Here we kept using the TitleBody, but excluded the genres.
+        // This made it possible to use JSON to send data into the function,
+        // Instead of spiltting it into multiple inputs
         [HttpPost("updatetitle/")]
         public IActionResult updateTitle(TitleBody data)
         {
