@@ -206,7 +206,7 @@ public class DataServicePerson : IDataServicePerson
 
                 if (knownForTitles.Length >= 1)
                 {
-                    string query = "INSERT INTO known_for (nconst, tconst) VALUES(@nconst, knownfortitles);";
+                    string query = "INSERT INTO known_for (nconst, tconst) VALUES(@nconst, @knownfortitles);";
                     using var cmd = new NpgsqlCommand(query, connection);
                     cmd.Parameters.AddWithValue("nconst", nconst);
                     cmd.Parameters.AddWithValue("knownfortitles", knownForTitles);

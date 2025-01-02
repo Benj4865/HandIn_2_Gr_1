@@ -145,16 +145,6 @@ namespace WebAPI.Controllers
                 return BadRequest();
             }
         }
-
-        /*
-        [HttpGet("knownfor/{NConst}")]
-        public IActionResult FindKnownForTitles(string NConst)
-        {
-            var persons = DataService.FindKnownForTitles(NConst);
-            return Ok(persons);
-        }
-        */
-
     }
 
 

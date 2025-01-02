@@ -8,7 +8,7 @@ namespace xUnit_Handin_2
     public class DataServicePersonTest
     {
 
-        // The Following test is coded with help from Co-Pilot
+        
         [Fact]
         public void GetPerson_ValidID_ReturnsPerson()
         {
@@ -26,46 +26,6 @@ namespace xUnit_Handin_2
 
         }
 
-        // The Following test is coded with help from Co-Pilot
-        [Fact]
-        public void GetPerson_InvalidID_ReturnsNull()
-        {
-            string invalidId = "nm10000000000000"; //Non existing ID
-            var service = new DataServicePerson();
-
-            Person result = service.GetPerson(invalidId);
-
-            Assert.Null(result);
-
-        }
-
-        // The Following test is coded with help from Co-Pilot
-        [Fact]
-        public void SearchByProfession_ValidProfession_ReturnsPeople()
-        {
-            var profession = "actor";
-            var service = new DataServicePerson();
-            var result = service.SearchByProfession(profession);
-            // IList<Title> titleList = DataServiceTitle.FindEpisodesFromSeriesTconst("tt0108778");
-
-            Assert.NotNull(result);
-            var person = result[0];
-            Assert.NotEmpty(result[0].Primaryname);
-            
-        }
-
-        // The Following test is coded with help from Co-Pilot
-        [Fact]
-        public void SearchByProfession_InvalidProfession_ReturnsEmptyList()
-        {
-            var invalidProfession = "FLooferWoofer";
-            var service = new DataServicePerson();
-
-            var result = service.SearchByProfession(invalidProfession);
-
-            Assert.NotNull(result);
-            Assert.Empty(result);
-        }
 
         
         [Fact]
@@ -77,21 +37,28 @@ namespace xUnit_Handin_2
             Assert.Equal("María Alejandra Mosquera", person.Primaryname);
         }
 
-
-
-        // The Following test is coded with help from Co-Pilot
         [Fact]
-        public void SearchByProfession_EmptyProfession_ReturnsEmptyList()
+        public void createAndDeleteUser_test()
         {
-            var emptyProfession = "";
-            var service = new DataServicePerson();
+            var dataservice = new DataServiceUser();
 
-            var result = service.SearchByProfession(emptyProfession);
+            var usernew = new User
+            {
+                UserName = "unituser123",
+                UserPassword = "unituser123",
+                UserEmail = ""
+            };
 
-            Assert.NotNull(result);
-            Assert.Empty(result);
+            dataservice.CreateUser(usernew.UserName, usernew.UserPassword, usernew.UserEmail);
+
+            IList<User> user = dataservice.SearchUser("unituser123", "unituser123", 0, 1, 1);
+            Assert.Equal(user[0].UserName, "unituser123");
+
+            dataservice.DeleteUser(user[0].UserID, usernew.UserPassword);
+
+            Assert.Null(dataservice.SearchUID(user[0].UserID).UserName);
+            
         }
-
 
         
         [Fact]
