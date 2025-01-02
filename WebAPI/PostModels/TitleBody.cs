@@ -22,7 +22,7 @@ namespace WebAPI.PostModels
         public int RuntimeMinutes { get; set; }
 
         //public IList<Genre>? Genre { get; set; }
-        public string GenreList { get; set; }
+        //public string GenreList { get; set; }
 
         public string PosterLink { get; set; }
 

@@ -20,7 +20,7 @@ namespace HandIn_2_Gr_1
         public static IList<Title>? titleList = new List<Title>();
 
         // Currently only supports 1 genre, and a new function is needed to insert into title_genre
-        public Title CreateTitle(string tconst, string titletype, string primaryTitle, string originalTitle, string isAdult, string startyear, string endyear, int runtimeMinutes, string genres, string posterlink, string plot)
+        public Title CreateTitle(string tconst, string titletype, string primaryTitle, string originalTitle, string isAdult, string startyear, string endyear, int runtimeMinutes, string posterlink, string plot)
         {
             var connectionString = Config.GetConnectionString();
             using var connection = new NpgsqlConnection(connectionString);
@@ -207,7 +207,7 @@ namespace HandIn_2_Gr_1
 
         // The folowing statement can not easily be scaled, but this was faster to do at the time, but had more time been given, it could have been buildt a 
         //Dynamic query that only consisted of the values that needed to be updated
-        public Title updateTitle(string tconst, string titletype, string primaryTitle, string originalTitle, string isAdult, string startyear, string endyear, int runtimeMinutes, string genres, string posterlink, string plot)
+        public Title updateTitle(string tconst, string titletype, string primaryTitle, string originalTitle, string isAdult, string startyear, string endyear, int runtimeMinutes, string posterlink, string plot)
         {
             var connectionString = Config.GetConnectionString();
 

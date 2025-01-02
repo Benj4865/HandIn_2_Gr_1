@@ -24,7 +24,7 @@ namespace WebAPI.Controllers
         [HttpPost("createtitle/")]
         public IActionResult CreateTitle(TitleBody data)
         {
-            var title = DataService.CreateTitle(data.Tconst, data.TitleType, data.PrimaryTitle, data.OriginalTitle, data.IsAdult, data.StartYear, data.EndYear, data.RuntimeMinutes, data.GenreList, data.PosterLink, data.plot);
+            var title = DataService.CreateTitle(data.Tconst, data.TitleType, data.PrimaryTitle, data.OriginalTitle, data.IsAdult, data.StartYear, data.EndYear, data.RuntimeMinutes, data.PosterLink, data.plot);
             return Ok(title);
         }
 
@@ -66,7 +66,7 @@ namespace WebAPI.Controllers
         [HttpPost("updatetitle/")]
         public IActionResult updateTitle(TitleBody data)
         {
-            var title = DataService.updateTitle(data.Tconst, data.TitleType, data.PrimaryTitle, data.OriginalTitle, data.IsAdult, data.StartYear, data.EndYear, data.RuntimeMinutes, data.GenreList, data.PosterLink, data.plot);
+            var title = DataService.updateTitle(data.Tconst, data.TitleType, data.PrimaryTitle, data.OriginalTitle, data.IsAdult, data.StartYear, data.EndYear, data.RuntimeMinutes, data.PosterLink, data.plot);
             return Ok(title);
         }
 
