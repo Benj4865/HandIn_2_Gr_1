@@ -48,7 +48,7 @@ namespace HandIn_2_Gr_1
                     isAdultSQL = false;
                 }
 
-                string query = "INSERT INTO title_basics (tconst, titletype, primaryTitle, originalTitle, isAdult, startyear, endyear, runtimeMinutes, genres, poster, plot) VALUES (@tconst, @titletype, @primaryTitle, @originalTitle, @isAdult, @startyear, @endyear, @runtimeMinutes, @genres, @posterlink, @plot);";
+                string query = "INSERT INTO title_basics (tconst, titletype, primaryTitle, originalTitle, isAdult, startyear, endyear, runtimeMinutes, poster, plot) VALUES (@tconst, @titletype, @primaryTitle, @originalTitle, @isAdult, @startyear, @endyear, @runtimeMinutes, @posterlink, @plot);";
                 using var cmd = new NpgsqlCommand(query, connection);
 
                 cmd.Parameters.AddWithValue("tconst", tconst);
@@ -59,7 +59,7 @@ namespace HandIn_2_Gr_1
                 cmd.Parameters.AddWithValue("startyear", startyear);
                 cmd.Parameters.AddWithValue("endyear", endyear);
                 cmd.Parameters.AddWithValue("runtimeMinutes", runtimeMinutes);
-                cmd.Parameters.AddWithValue("genres", genres);
+                //cmd.Parameters.AddWithValue("genres", genres);
                 cmd.Parameters.AddWithValue("posterlink", posterlink);
                 cmd.Parameters.AddWithValue("plot", plot);
                 cmd.ExecuteNonQuery();
@@ -302,7 +302,7 @@ namespace HandIn_2_Gr_1
                         cmd.ExecuteNonQuery();
                     }
 
-
+/*
                     if (genres.Length >= 1)
                     {
                         string query = "UPDATE title_basics SET genres = @genres WHERE tconst = @tconst;";
@@ -311,7 +311,7 @@ namespace HandIn_2_Gr_1
                         cmd.Parameters.AddWithValue("genres", genres);
                         cmd.ExecuteNonQuery();
                     }
-
+*/
 
                     if (posterlink.Length >= 1)
                     {
