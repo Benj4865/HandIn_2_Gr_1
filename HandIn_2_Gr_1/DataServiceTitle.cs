@@ -146,6 +146,9 @@ namespace HandIn_2_Gr_1
 
                     titleList.Add(title);
                 }
+                UpdateSeachHistory update = new UpdateSeachHistory();
+                update.LogSearchHistory(Config.Logged_In_User(), "Searched for movie: " + name);
+
                 return titleList;
             }
             catch

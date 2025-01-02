@@ -304,7 +304,7 @@ public class DataServicePerson : IDataServicePerson
                     professionName = reader.GetString(2)
                 };
 
-                // the ProfessionList object for the person is created at filled
+                // the ProfessionList object for the person is created and filled
                 // We dont fill out the nconst in the professions class, as it is already found through the Person Object
                 var professionList2 = new List<Professions>
                 {
