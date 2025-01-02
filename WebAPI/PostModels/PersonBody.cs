@@ -12,6 +12,8 @@ namespace WebAPI.PostModels
 
         public string Deathyear { get; set; } = null;
 
+        //Was a IList<Professions> eraly on, but it could not be communicationproperly to the frontend
+        // Therefore it was made as a string. 
         public string Primaryprofessions { get; set; } = null;
 
         public string KnownFor { get; set; } = null;

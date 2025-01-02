@@ -52,7 +52,7 @@ namespace xUnit_Handin_2
             dataservice.CreateUser(usernew.UserName, usernew.UserPassword, usernew.UserEmail);
 
             IList<User> user = dataservice.SearchUser("unituser123", "unituser123", 0, 1, 1);
-            Assert.Equal(user[0].UserName, "unituser123");
+            Assert.Equal("unituser123", user[0].UserName);
 
             dataservice.DeleteUser(user[0].UserID, usernew.UserPassword);
 
